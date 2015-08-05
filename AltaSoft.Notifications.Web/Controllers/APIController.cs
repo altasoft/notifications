@@ -53,8 +53,22 @@ namespace AltaSoft.Notifications.Web.Controllers
                     userInfos.Add(new Tuple<int?, string>(null, model.To));
 
 
-                if (userInfos.Count == 0)
-                    throw new Exception("Please set: ExternalUserId, ExternalUserIds, or To");
+                Event ev;
+                using (var bo = new EventBusinessObject())
+                    ev = bo.GetByKey(model.ApplicationId, model.EventKey);
+
+                if (ev != null)
+                {
+                    using (var bo = new SubscriptionBusinessObject())
+                    {
+                        var items = bo.GetList(x => x.EventId == ev.Id);
+                        userInfos.AddRange(items.ConvertAll(x => new Tuple<int?, string>(x.UserId, GetToByProvider(x.User, x.ProviderId))));
+                    }
+                }
+
+
+                //if (userInfos.Count == 0)
+                //    throw new Exception("No Users found to send. Please set: ExternalUserId, ExternalUserIds, To, or EventKey");
 
                 var groupId = Guid.NewGuid();
 
@@ -492,7 +506,7 @@ namespace AltaSoft.Notifications.Web.Controllers
             {
                 using (var bo = new UserBusinessObject())
                 {
-                    var user = bo.GetByExternalUserId(applicationId, item);
+                    var user = bo.GetByExternalUserId(applicationId, item.Trim());
                     if (user == null)
                         continue;
 

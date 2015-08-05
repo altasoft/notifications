@@ -29,6 +29,15 @@ namespace AltaSoft.Notifications.DAL
             this.Delete(existing);
         }
 
+        public override List<Subscription> GetList(Expression<Func<Subscription, bool>> where = null)
+        {
+            var query = this.GetListQuery(where);
+
+            query = query.Include(x => x.User);
+
+            return query.ToList();
+        }
+
         public List<Subscription> GetList(int applicationId, List<string> eventKeys, List<string> providerKeys, List<string> externalUserIds)
         {
             var eventIds = db.Events.Where(x => x.ApplicationId == applicationId && eventKeys.Contains(x.Key)).Select(x => x.Id).ToList();
