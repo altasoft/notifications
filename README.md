@@ -7,3 +7,5 @@ Unified Notifications System, Including SMS, Email, Realtime, etc.
 [API-Send](https://github.com/altasoft/notifications/wiki/API-Send)
 
 [API-SaveUser](https://github.com/altasoft/notifications/wiki/API-SaveUser)
+
+[API-SaveUsers](https://github.com/altasoft/notifications/wiki/API-SaveUsers)
