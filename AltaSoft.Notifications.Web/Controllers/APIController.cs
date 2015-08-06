@@ -376,7 +376,7 @@ namespace AltaSoft.Notifications.Web.Controllers
 
 
         [HttpGet]
-        public APIResult<List<Event>> Events(ApplicationCredentialsModel model)
+        public APIResult<List<EventResult>> Events(ApplicationCredentialsModel model)
         {
             try
             {
@@ -391,15 +391,20 @@ namespace AltaSoft.Notifications.Web.Controllers
 
                 using (var bo = new EventBusinessObject())
                 {
-                    var result = bo.GetList();
+                    var result = bo.GetList().ConvertAll(x => new EventResult
+                    {
+                        Key = x.Key,
+                        Description = x.Description,
+                        RegDate = x.RegDate
+                    });
 
-                    return new APIResult<List<Event>>(result);
+                    return new APIResult<List<EventResult>>(result);
                 }
 
             }
             catch (Exception ex)
             {
-                return new APIResult<List<Event>>(ex.Message, ex.ToString());
+                return new APIResult<List<EventResult>>(ex.Message, ex.ToString());
             }
         }
 
@@ -453,7 +458,7 @@ namespace AltaSoft.Notifications.Web.Controllers
         }
 
         [HttpGet]
-        public APIResult<List<Message>> Messages(GetMessagesModel model)
+        public APIResult<List<MessageResult>> Messages(GetMessagesModel model)
         {
             try
             {
@@ -480,19 +485,35 @@ namespace AltaSoft.Notifications.Web.Controllers
 
 
                 if (ids.Count == 0)
-                    return new APIResult<List<Message>>(new List<Message>());
+                    return new APIResult<List<MessageResult>>(new List<MessageResult>());
 
 
                 using (var bo = new MessageBusinessObject())
                 {
-                    var result = bo.GetList(x => ids.Contains(x.Id));
+                    var result = bo.GetListWithUserAndProvider(x => ids.Contains(x.Id)).ConvertAll(x=>
+                    {
+                        return new MessageResult
+                        {
+                            Content = x.Content,
+                            ErrorDetails = x.ErrorDetails,
+                            ErrorMessage = x.ErrorMessage,
+                            ExternalUserId = x.User.ExternalUserId,
+                            Priority = x.Priority,
+                            ProcessDate = x.ProcessDate,
+                            ProviderKey = x.Provider.Key,
+                            RetryCount = x.RetryCount,
+                            State = x.State,
+                            Subject = x.Subject,
+                            To = x.To
+                        };
+                    });
 
-                    return new APIResult<List<Message>>(result);
+                    return new APIResult<List<MessageResult>>(result);
                 }
             }
             catch (Exception ex)
             {
-                return new APIResult<List<Message>>(ex.Message, ex.ToString());
+                return new APIResult<List<MessageResult>>(ex.Message, ex.ToString());
             }
         }
 

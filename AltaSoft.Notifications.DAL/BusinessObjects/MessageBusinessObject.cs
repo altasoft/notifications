@@ -30,5 +30,12 @@ namespace AltaSoft.Notifications.DAL
 
             return items;
         }
+
+        public List<Message> GetListWithUserAndProvider(Expression<Func<Message, bool>> where)
+        {
+            var query = this.GetListQuery(where).Include(x => x.User).Include(x => x.Provider);
+
+            return query.ToList();
+        }
     }
 }

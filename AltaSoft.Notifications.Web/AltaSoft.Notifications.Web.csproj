@@ -180,8 +180,10 @@
     </Compile>
     <Compile Include="Models\API\APIResult.cs" />
     <Compile Include="Models\API\DeleteEventModel.cs" />
+    <Compile Include="Models\API\EventResult.cs" />
     <Compile Include="Models\API\GetMessagesModel.cs" />
     <Compile Include="Models\API\GetSubscriptionsModel.cs" />
+    <Compile Include="Models\API\MessageResult.cs" />
     <Compile Include="Models\API\SaveEventViewModel.cs" />
     <Compile Include="Models\API\SendModel.cs" />
     <Compile Include="Models\API\ApplicationCredentialsModel.cs" />

@@ -14,7 +14,7 @@ namespace AltaSoft.Notifications.Web.Controllers
             using (var bo = new MessageBusinessObject())
             {
                 var fromDate = DateTime.Now.AddDays(-1);
-                ViewBag.MessagesSentCount = bo.ItemsCount(x => x.RegDate >= fromDate);
+                ViewBag.MessagesSentCount = bo.ItemsCount(x => x.RegDate >= fromDate && x.State == MessageStates.Success);
             }
 
             using (var bo = new ProviderBusinessObject())
