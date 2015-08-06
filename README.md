@@ -10,10 +10,10 @@ Unified Notifications System, Including SMS, Email, Realtime, etc.
 
 [API-SaveUsers](https://github.com/altasoft/notifications/wiki/API-SaveUsers)
 
-[SaveEvent](https://github.com/altasoft/notifications/wiki/API--SaveEvent)
+[API-SaveEvent](https://github.com/altasoft/notifications/wiki/API--SaveEvent)
 
-[DeleteEvent](https://github.com/altasoft/notifications/wiki/API-DeleteEvent)
+[API-DeleteEvent](https://github.com/altasoft/notifications/wiki/API-DeleteEvent)
 
-[SubscribeEvent](https://github.com/altasoft/notifications/wiki/API---SubscribeEvent)
+[API-SubscribeEvent](https://github.com/altasoft/notifications/wiki/API---SubscribeEvent)
 
-[UnsubscribeEvent](https://github.com/altasoft/notifications/wiki/API--UnsubscribeEvent)
+[API-UnsubscribeEvent](https://github.com/altasoft/notifications/wiki/API--UnsubscribeEvent)
