@@ -17,3 +17,5 @@ Unified Notifications System, Including SMS, Email, Realtime, etc.
 [API-SubscribeEvent](https://github.com/altasoft/notifications/wiki/API---SubscribeEvent)
 
 [API-UnsubscribeEvent](https://github.com/altasoft/notifications/wiki/API--UnsubscribeEvent)
+
+[API-Events](https://github.com/altasoft/notifications/wiki/API-Events)
