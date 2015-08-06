@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using AltaSoft.Notifications.DAL;
 using AltaSoft.Notifications.DAL.Context;
+using System.Threading;
 
 namespace AltaSoft.Notifications.Web.Controllers
 {
@@ -18,6 +19,8 @@ namespace AltaSoft.Notifications.Web.Controllers
         // GET: Application
         public ActionResult Index()
         {
+            Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+
             return View(db.Applications.ToList());
         }
 

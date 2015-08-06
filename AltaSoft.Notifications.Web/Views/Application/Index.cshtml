@@ -1,15 +1,45 @@
 ﻿@model IEnumerable<AltaSoft.Notifications.DAL.Application>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Projects";
 }
 
-<h2>Applications</h2>
+<style>
+    .projects {
+    }
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
+    .projects .item {
+        border: 1px solid #D2D2D2;
+        border-radius: 5px;
+        padding: 30px 30px 40px;
+        float: left;
+        min-width: 360px;
+        text-align: center;
+        background-color: #F9F9F9;
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    .projects .item h2 {
+        color: #07457c;
+    }
+
+    .projects .item .logo {
+        height: 130px;
+        margin-bottom: 10px;
+    }
+
+    .projects .item table td:first-child {
+        color: gray;
+    }
+</style>
+
+<h2>Projects</h2>
+<hr />
+<h4>Are using our system</h4>
+<hr />
+
+@*<table class="table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Id)
@@ -36,39 +66,41 @@
             @Html.DisplayNameFor(model => model.RegDate)
         </th>
         <th></th>
-    </tr>
-
+    </tr>*@
+<div class="projects">
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SecretKey)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Username)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CheckUserIdUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmailFromAddress)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmailFromFullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RegDate)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id })
-            </td>
-        </tr>
+        <div class="item">
+            <div>
+                <img class="logo" src="@item.ImageUrl" />
+            </div>
+            <h2>@item.Name</h2>
+            <hr />
+            <h4>@item.Description</h4>
+            <br />
+            <table class="table table-striped">
+                <tr>
+                    <td>@item.RegDate.ToString("MMM dd, yyyy")</td>
+                </tr>
+                <tr>
+                    <td>@item.EmailFromAddress</td>
+                </tr>
+                <tr>
+                    <td>@item.EmailFromFullName</td>
+                </tr>
+            </table>
+            @if (item.IsTestMode)
+            {
+                <div class="alert alert-info">
+                    Development
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-success">
+                    Production
+                </div>
+            }
+        </div>
     }
-
-</table>
+</div>

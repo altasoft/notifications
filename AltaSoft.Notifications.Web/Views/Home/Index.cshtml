@@ -1,29 +1,62 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Welcome";
 }
+<style>
+    .statistics .jumbotron {
+        background: #f4f4f4;
+        cursor: pointer;
+    }
 
-<div class="jumbotron">
-    <h1>Use it</h1>
+    .statistics .jumbotron:hover {
+        background: #e5e5e5;
+    }
+</style>
+<div class="text-center">
+    <div style="font-size: 170px;">
+        <i class="fa fa-bell-o"></i>
+    </div>
+    <h1>Welcome to Notification System</h1>
     <p class="lead">Easy to integrate using http requests. Send notifications to your customers.</p>
-    <p class="text-right"><a href="@Url.Action("Index", "Help", new { area = "HelpPage" })" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    <br />
+    <br />
+    <p>
+        by <a href="http://www.altasoft.ge" target="_blank">Alta Software</a>
+    </p>
+    <br />
+    <br />
+    <br />
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Application</h2>
-        <p>
-            External system, like yours. Application has own id & secret key
-        </p>
-        <p><a class="btn btn-default" href="@Url.Action("Index", "Application", new { area = "" })">View Applications &raquo;</a></p>
+<div class="row text-center statistics">
+    <div class="col-md-4 jumbotron" data-link="@Url.Action("Index", "Application", new { area = "" })">
+        <div style="font-size: 60px;">
+            @ViewBag.ApplicationsCount
+        </div>
+        <h2>Projects</h2>
+        <p>Using our system</p>
     </div>
-    <div class="col-md-4">
-        <h2>Provider</h2>
-        <p>The way of sending information from System to customers</p>
-        <p><a class="btn btn-default" href="@Url.Action("Index", "Provider", new { area = "" })">Available Providers &raquo;</a></p>
+    <div class="col-md-4 jumbotron" data-link="@Url.Action("Index", "Provider", new { area = "" })">
+        <div style="font-size: 60px;">
+            @ViewBag.ProvidersCount
+        </div>
+        <h2>Providers</h2>
+        <p>Ways to send information</p>
     </div>
-    <div class="col-md-4">
-        <h2>Message</h2>
-        <p>One message, which will be sent to customer using specific provider</p>
-        <p><a class="btn btn-default" href="@Url.Action("Index", "Message", new { area = "" })">Monitor Messages &raquo;</a></p>
+    <div class="col-md-4 jumbotron">
+        <div style="font-size: 60px;">
+            @ViewBag.MessagesSentCount
+        </div>
+        <h2>Messages</h2>
+        <p>Are sent in last 24 hours</p>
+        @*<p><a class="btn btn-default" href="@Url.Action("Index", "Provider", new { area = "" })">Available Providers &raquo;</a></p>*@
     </div>
+
 </div>
+<script>
+    $('.statistics .jumbotron').on('click', function () {
+        var link = $(this).data('link');
+        if (!link) return;
+
+        document.location.assign(link);
+    });
+</script>

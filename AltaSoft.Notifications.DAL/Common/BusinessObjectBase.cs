@@ -72,10 +72,23 @@ namespace AltaSoft.Notifications.DAL.Common
             return query.OrderBy(x => x.Id).Skip(skip).Take(take).ToList();
         }
 
+        public virtual int ItemsCount(Expression<Func<TEntity, bool>> where = null)
+        {
+            var query = (IQueryable<TEntity>)db.Set<TEntity>().AsNoTracking();
+
+            if (where != null)
+                query = query.Where(where);
+
+            return query.Count();
+        }
+
 
         protected virtual IQueryable<TEntity> GetListQuery(Expression<Func<TEntity, bool>> where)
         {
-            var query = db.Set<TEntity>().AsNoTracking().Where(where);
+            var query = (IQueryable<TEntity>)db.Set<TEntity>().AsNoTracking();
+
+            if (where != null)
+                query = query.Where(where);
 
             return query;
         }

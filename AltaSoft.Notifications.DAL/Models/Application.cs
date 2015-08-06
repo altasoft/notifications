@@ -35,5 +35,14 @@ namespace AltaSoft.Notifications.DAL
         public string EmailFromAddress { get; set; }
 
         public string EmailFromFullName { get; set; }
+
+
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        public string ImageUrl { get; set; }
+
+        public bool IsTestMode { get; set; }
     }
 }
