@@ -23,3 +23,5 @@ Unified Notifications System, Including SMS, Email, Realtime, etc.
 [API-Subscriptions](https://github.com/altasoft/notifications/wiki/API-Subscriptions)
 
 [API-Messages](https://github.com/altasoft/notifications/wiki/API-Messages)
+
+[Projects]( https://github.com/altasoft/notifications/wiki/Projects)
