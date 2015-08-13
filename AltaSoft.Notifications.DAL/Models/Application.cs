@@ -43,6 +43,14 @@ namespace AltaSoft.Notifications.DAL
 
         public string ImageUrl { get; set; }
 
+        public int? SMSServiceCustomerId { get; set; }
+
+        public string SMSServiceProductAnyTime { get; set; }
+
+        public string SMSServiceProductLimited { get; set; }
+
+        public string SMSFromName { get; set; }
+
         public bool IsTestMode { get; set; }
     }
 }

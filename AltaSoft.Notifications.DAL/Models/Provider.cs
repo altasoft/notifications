@@ -24,5 +24,7 @@ namespace AltaSoft.Notifications.DAL
         /// Display Name
         /// </summary>
         public string Name { get; set; }
+
+        public string WebUrl { get; set; }
     }
 }

@@ -48,5 +48,10 @@ namespace AltaSoft.Notifications.DAL
         /// Duration in MS
         /// </summary>
         public int ProcessingDuration { get; set; }
+
+        /// <summary>
+        /// for SMS Service, to send it immediately
+        /// </summary>
+        public bool? ForceSendingNow { get; set; }
     }
 }
