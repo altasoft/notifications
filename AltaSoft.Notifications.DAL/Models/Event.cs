@@ -28,5 +28,7 @@ namespace AltaSoft.Notifications.DAL
         /// Display Name
         /// </summary>
         public string Description { get; set; }
+
+        public bool? IsSystem { get; set; }
     }
 }

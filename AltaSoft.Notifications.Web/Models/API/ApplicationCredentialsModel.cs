@@ -9,5 +9,7 @@ namespace AltaSoft.Notifications.Web.Models.API
     {
         public int ApplicationId { get; set; }
         public string ApplicationSecretKey { get; set; }
+
+        public string ExternalUserId { get; set; }
     }
 }

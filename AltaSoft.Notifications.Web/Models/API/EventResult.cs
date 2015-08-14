@@ -10,5 +10,6 @@ namespace AltaSoft.Notifications.Web.Models.API
         public string Key { get; set; }
         public string Description { get; set; }
         public DateTime RegDate { get; set; }
+        public bool IsSystem { get; set; }
     }
 }

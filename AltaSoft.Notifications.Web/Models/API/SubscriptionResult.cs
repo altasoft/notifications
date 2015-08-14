@@ -9,6 +9,7 @@ namespace AltaSoft.Notifications.Web.Models.API
     {
         public string ProviderKey { get; set; }
         public string EventKey { get; set; }
+        public string EventDescription { get; set; }
         public string ExternalUserId { get; set; }
     }
 }

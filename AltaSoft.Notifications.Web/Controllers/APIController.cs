@@ -12,7 +12,7 @@ namespace AltaSoft.Notifications.Web.Controllers
     public class APIController : ApiController
     {
         [HttpPost]
-        public APIResult<List<int>> Send(SendModel model)
+        public APIResult<List<int>> Send([FromUri]SendModel model)
         {
             var messageIds = new List<int>();
 
@@ -53,9 +53,12 @@ namespace AltaSoft.Notifications.Web.Controllers
                     userInfos.Add(new Tuple<int?, string>(null, model.To));
 
 
-                Event ev;
-                using (var bo = new EventBusinessObject())
-                    ev = bo.GetByKey(model.ApplicationId, model.EventKey);
+                Event ev = null;
+                if (!String.IsNullOrEmpty(model.EventKey))
+                {
+                    using (var bo = new EventBusinessObject())
+                        ev = bo.GetByKey(model.ApplicationId, model.EventKey);
+                }
 
                 if (ev != null)
                 {
@@ -103,7 +106,7 @@ namespace AltaSoft.Notifications.Web.Controllers
         }
 
         [HttpPost]
-        public APIResult SaveUser(SaveUserModel model)
+        public APIResult SaveUser([FromUri]SaveUserModel model)
         {
             try
             {
@@ -142,7 +145,7 @@ namespace AltaSoft.Notifications.Web.Controllers
         }
 
         [HttpPost]
-        public APIResult SaveUsers(SaveUsersModel model)
+        public APIResult SaveUsers([FromUri]SaveUsersModel model)
         {
             try
             {
@@ -185,7 +188,7 @@ namespace AltaSoft.Notifications.Web.Controllers
         }
 
         [HttpPost]
-        public APIResult SaveEvent(SaveEventViewModel model)
+        public APIResult SaveEvent([FromUri]SaveEventViewModel model)
         {
             try
             {
@@ -219,7 +222,7 @@ namespace AltaSoft.Notifications.Web.Controllers
         }
 
         [HttpPost]
-        public APIResult DeleteEvent(DeleteEventModel model)
+        public APIResult DeleteEvent([FromUri]DeleteEventModel model)
         {
             try
             {
@@ -246,7 +249,7 @@ namespace AltaSoft.Notifications.Web.Controllers
         }
 
         [HttpPost]
-        public APIResult SubscribeEvent(SubscribeUserModel model)
+        public APIResult SubscribeEvent([FromUri]SubscribeUserModel model)
         {
             try
             {
@@ -310,7 +313,7 @@ namespace AltaSoft.Notifications.Web.Controllers
         }
 
         [HttpPost]
-        public APIResult UnsubscribeEvent(SubscribeUserModel model)
+        public APIResult UnsubscribeEvent([FromUri]SubscribeUserModel model)
         {
             try
             {
@@ -376,7 +379,7 @@ namespace AltaSoft.Notifications.Web.Controllers
 
 
         [HttpGet]
-        public APIResult<List<EventResult>> Events(ApplicationCredentialsModel model)
+        public APIResult<List<EventResult>> Events([FromUri]ApplicationCredentialsModel model)
         {
             try
             {
@@ -391,11 +394,12 @@ namespace AltaSoft.Notifications.Web.Controllers
 
                 using (var bo = new EventBusinessObject())
                 {
-                    var result = bo.GetList().ConvertAll(x => new EventResult
+                    var result = bo.GetList(x => x.ApplicationId == model.ApplicationId).ConvertAll(x => new EventResult
                     {
                         Key = x.Key,
                         Description = x.Description,
-                        RegDate = x.RegDate
+                        RegDate = x.RegDate,
+                        IsSystem = x.IsSystem ?? false
                     });
 
                     return new APIResult<List<EventResult>>(result);
@@ -409,7 +413,7 @@ namespace AltaSoft.Notifications.Web.Controllers
         }
 
         [HttpGet]
-        public APIResult<List<SubscriptionResult>> Subscriptions(GetSubscriptionsModel model)
+        public APIResult<List<SubscriptionResult>> Subscriptions([FromUri]GetSubscriptionsModel model)
         {
             try
             {
@@ -443,6 +447,7 @@ namespace AltaSoft.Notifications.Web.Controllers
                     var result = items.Select(x => new SubscriptionResult
                     {
                         EventKey = x.Event.Key,
+                        EventDescription = x.Event.Description,
                         ProviderKey = x.Provider.Key,
                         ExternalUserId = x.User.ExternalUserId
                     }).ToList();
@@ -458,7 +463,7 @@ namespace AltaSoft.Notifications.Web.Controllers
         }
 
         [HttpGet]
-        public APIResult<List<MessageResult>> Messages(GetMessagesModel model)
+        public APIResult<List<MessageResult>> Messages([FromUri]GetMessagesModel model)
         {
             try
             {
@@ -490,7 +495,7 @@ namespace AltaSoft.Notifications.Web.Controllers
 
                 using (var bo = new MessageBusinessObject())
                 {
-                    var result = bo.GetListWithUserAndProvider(x => ids.Contains(x.Id)).ConvertAll(x=>
+                    var result = bo.GetListWithUserAndProvider(x => ids.Contains(x.Id)).ConvertAll(x =>
                     {
                         return new MessageResult
                         {
