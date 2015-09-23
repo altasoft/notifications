@@ -12,7 +12,11 @@ namespace AltaSoft.Notifications.Web
                       "~/Scripts/jquery-{version}.js",
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/select2.js",
-                      "~/Scripts/respond.js"));
+                      "~/Scripts/respond.js",
+                      //"~/Scripts/tinymce/tinymce.js",
+                      "~/Scripts/ckeditor/ckeditor.js",
+                      "~/Scripts/altasoft.common.js"
+                      ));
 
             bundles.Add(new StyleBundle("~/styles/css").Include(
                       "~/Content/bootstrap.css",

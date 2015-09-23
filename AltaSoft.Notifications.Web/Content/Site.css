@@ -1,8 +1,8 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
-    font-family: 'Segoe UI';
-    font-size: 16px;
+    font-family: 'Segoe UI', Sylfaen;
+    font-size: 14px;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -18,16 +18,10 @@
     white-space: normal;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
-}
-
 
 .navbar {
     background: #07457c;
+    font-size: 16px;
 }
 
 .navbar .navbar-brand {
@@ -53,6 +47,7 @@ textarea {
 
 footer {
     color: gray;
+    font-size: 16px;
 }
 
 
