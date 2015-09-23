@@ -11,22 +11,9 @@ namespace AltaSoft.Notifications.DAL
 {
     public class MessageBusinessObject : BusinessObjectBase<Message>
     {
-        public async Task<List<Message>> GetListToBeProceeded(Expression<Func<Message, bool>> where)
+        public async Task<List<Message>> GetListToBeProceeded(MessagePriority priority)
         {
-            var query = db.Set<Message>().Where(where);
-
-            query = query.Where(x => x.State == MessageStates.Pending || x.State == MessageStates.ProviderManagerNotFound);
-            query = query.Where(x => x.ProcessDate == null || x.ProcessDate <= DateTime.Now);
-
-            query = query.Include(x => x.Provider);
-            query = query.Include(x => x.User);
-            query = query.Include(x => x.Application);
-
-            var items = query.ToList();
-
-            items.ForEach(x => x.State = MessageStates.Processing);
-
-            await db.SaveChangesAsync();
+            var items = db.Database.SqlQuery<Message>("EXEC dbo.MessagesSelectToProcceed {0}", (int)priority).ToList();
 
             return items;
         }
@@ -36,6 +23,13 @@ namespace AltaSoft.Notifications.DAL
             var query = this.GetListQuery(where).Include(x => x.User).Include(x => x.Provider);
 
             return query.ToList();
+        }
+
+        public void LoadReferences(Message item)
+        {
+            db.Entry(item).Reference(x => x.Provider).Load();
+            db.Entry(item).Reference(x => x.User).Load();
+            db.Entry(item).Reference(x => x.Application).Load();
         }
     }
 }

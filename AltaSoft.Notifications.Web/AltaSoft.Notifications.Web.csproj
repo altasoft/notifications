@@ -191,6 +191,7 @@
     <Compile Include="Models\API\SaveUserModel.cs" />
     <Compile Include="Models\API\SubscribeUserModel.cs" />
     <Compile Include="Models\API\SubscriptionResult.cs" />
+    <Compile Include="Models\ComposeModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -199,6 +200,8 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\select2-bootstrap.css" />
+    <Content Include="Content\select2.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -245,6 +248,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\select2.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -280,6 +284,7 @@
     <Content Include="Views\Provider\Details.cshtml" />
     <Content Include="Views\Provider\Edit.cshtml" />
     <Content Include="Views\Provider\Index.cshtml" />
+    <Content Include="Views\Home\Compose.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -1,0 +1,15 @@
+﻿@model ComposeModel
+@{
+    ViewBag.Title = "Compose";
+}
+
+<style>
+    #Compose {
+    }
+</style>
+
+<h2>Compose</h2>
+<hr />
+<div id="Compose">
+    @Html.ListBoxFor(x => x.To, null)
+</div>

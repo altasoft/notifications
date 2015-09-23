@@ -26,7 +26,7 @@ namespace AltaSoft.Notifications.Service
         {
             get
             {
-                return (Priority == MessagePriority.High) ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(2000);
+                return (Priority == MessagePriority.High) ? TimeSpan.FromMilliseconds(1000) : TimeSpan.FromMilliseconds(9000);
             }
         }
 
@@ -69,7 +69,7 @@ namespace AltaSoft.Notifications.Service
             using (var bo = new MessageBusinessObject())
             {
                 // 1. Get messages to be proceeded
-                var items = await bo.GetListToBeProceeded(x => x.Priority == Priority);
+                var items = await bo.GetListToBeProceeded(Priority);
 
 
                 // 2. Process them all
@@ -90,6 +90,8 @@ namespace AltaSoft.Notifications.Service
                             var processStartDate = DateTime.Now;
                             try
                             {
+                                bo.LoadReferences(item);
+
                                 var result = await pm.Process(item);
 
                                 var duration = DateTime.Now - processStartDate;

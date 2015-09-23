@@ -1,4 +1,5 @@
 ﻿using AltaSoft.Notifications.DAL;
+using AltaSoft.Notifications.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,13 @@ namespace AltaSoft.Notifications.Web.Controllers
             }
 
             return View();
+        }
+
+        public ActionResult Compose()
+        {
+            var model = new ComposeModel();
+
+            return View(model);
         }
 
         public ActionResult About()

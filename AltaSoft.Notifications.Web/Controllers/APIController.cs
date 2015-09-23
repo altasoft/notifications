@@ -12,8 +12,11 @@ namespace AltaSoft.Notifications.Web.Controllers
     public class APIController : ApiController
     {
         [HttpPost]
-        public APIResult<List<int>> Send([FromUri]SendModel model)
+        public APIResult<List<int>> Send(SendModel model, [FromUri]SendModel uriModel)
         {
+            if (model == null)
+                model = uriModel;
+
             var messageIds = new List<int>();
 
             try
@@ -106,10 +109,13 @@ namespace AltaSoft.Notifications.Web.Controllers
         }
 
         [HttpPost]
-        public APIResult SaveUser([FromUri]SaveUserModel model)
+        public APIResult SaveUser(SaveUserModel model, [FromUri]SaveUserModel uriModel)
         {
             try
             {
+                if (model == null)
+                    model = uriModel;
+
                 if (model == null)
                     throw new Exception("Please pass model");
 
@@ -145,10 +151,13 @@ namespace AltaSoft.Notifications.Web.Controllers
         }
 
         [HttpPost]
-        public APIResult SaveUsers([FromUri]SaveUsersModel model)
+        public APIResult SaveUsers(SaveUsersModel model, [FromUri]SaveUsersModel uriModel)
         {
             try
             {
+                if (model == null)
+                    model = uriModel;
+
                 if (model == null)
                     throw new Exception("Please pass model");
 
@@ -188,10 +197,13 @@ namespace AltaSoft.Notifications.Web.Controllers
         }
 
         [HttpPost]
-        public APIResult SaveEvent([FromUri]SaveEventViewModel model)
+        public APIResult SaveEvent(SaveEventViewModel model, [FromUri]SaveEventViewModel uriModel)
         {
             try
             {
+                if (model == null)
+                    model = uriModel;
+
                 if (model == null)
                     throw new Exception("Please pass model");
 
@@ -222,10 +234,13 @@ namespace AltaSoft.Notifications.Web.Controllers
         }
 
         [HttpPost]
-        public APIResult DeleteEvent([FromUri]DeleteEventModel model)
+        public APIResult DeleteEvent(DeleteEventModel model, [FromUri]DeleteEventModel uriModel)
         {
             try
             {
+                if (model == null)
+                    model = uriModel;
+
                 if (model == null)
                     throw new Exception("Please pass model");
 
@@ -249,10 +264,13 @@ namespace AltaSoft.Notifications.Web.Controllers
         }
 
         [HttpPost]
-        public APIResult SubscribeEvent([FromUri]SubscribeUserModel model)
+        public APIResult SubscribeEvent(SubscribeUserModel model, [FromUri]SubscribeUserModel uriModel)
         {
             try
             {
+                if (model == null)
+                    model = uriModel;
+
                 if (model == null)
                     throw new Exception("Please pass model");
 
@@ -313,10 +331,13 @@ namespace AltaSoft.Notifications.Web.Controllers
         }
 
         [HttpPost]
-        public APIResult UnsubscribeEvent([FromUri]SubscribeUserModel model)
+        public APIResult UnsubscribeEvent(SubscribeUserModel model, [FromUri]SubscribeUserModel uriModel)
         {
             try
             {
+                if (model == null)
+                    model = uriModel;
+
                 if (model == null)
                     throw new Exception("Please pass model");
 
@@ -379,10 +400,13 @@ namespace AltaSoft.Notifications.Web.Controllers
 
 
         [HttpGet]
-        public APIResult<List<EventResult>> Events([FromUri]ApplicationCredentialsModel model)
+        public APIResult<List<EventResult>> Events(ApplicationCredentialsModel model, [FromUri]ApplicationCredentialsModel uriModel)
         {
             try
             {
+                if (model == null)
+                    model = uriModel;
+
                 if (model == null)
                     throw new Exception("Please pass model");
 
@@ -413,10 +437,13 @@ namespace AltaSoft.Notifications.Web.Controllers
         }
 
         [HttpGet]
-        public APIResult<List<SubscriptionResult>> Subscriptions([FromUri]GetSubscriptionsModel model)
+        public APIResult<List<SubscriptionResult>> Subscriptions(GetSubscriptionsModel model, [FromUri]GetSubscriptionsModel uriModel)
         {
             try
             {
+                if (model == null)
+                    model = uriModel;
+
                 if (model == null)
                     throw new Exception("Please pass model");
 
@@ -463,10 +490,13 @@ namespace AltaSoft.Notifications.Web.Controllers
         }
 
         [HttpGet]
-        public APIResult<List<MessageResult>> Messages([FromUri]GetMessagesModel model)
+        public APIResult<List<MessageResult>> Messages(GetMessagesModel model, [FromUri]GetMessagesModel uriModel)
         {
             try
             {
+                if (model == null)
+                    model = uriModel;
+
                 if (model == null)
                     throw new Exception("Please pass model");
 
