@@ -31,6 +31,7 @@ namespace AltaSoft.Notifications.Service.ProviderManagers
                 mail.To.Add(message.To);
                 mail.Subject = message.Subject;
                 mail.Body = message.Content;
+                mail.IsBodyHtml = true;
 
                 await SmtpServer.SendMailAsync(mail);
 

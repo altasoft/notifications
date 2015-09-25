@@ -685,7 +685,7 @@
     <Content Include="Views\Provider\Details.cshtml" />
     <Content Include="Views\Provider\Edit.cshtml" />
     <Content Include="Views\Provider\Index.cshtml" />
-    <Content Include="Views\Home\Compose.cshtml" />
+    <Content Include="Views\Message\Compose.cshtml" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.woff" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.ttf" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.json" />
@@ -696,6 +696,8 @@
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.eot" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\readme.md" />
     <Content Include="Scripts\tinymce\langs\readme.md" />
+    <Content Include="Views\Message\ContentEditor\Html.cshtml" />
+    <Content Include="Views\Message\ContentEditor\SMS.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

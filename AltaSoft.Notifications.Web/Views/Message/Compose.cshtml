@@ -1,0 +1,130 @@
+﻿@model ComposeModel
+@{
+    ViewBag.Title = "Compose";
+}
+
+<style>
+    #ComposeForm {
+        margin-bottom: 100px;
+    }
+</style>
+
+<h2><i class="fa fa-paper-plane-o"></i> Compose</h2>
+<hr />
+<div class="row">
+    <div class="result-panel col-md-push-1 col-md-9">
+
+    </div>
+</div>
+<div class="form">
+    <form id="ComposeForm" class="form-horizontal" method="post">
+        <div class="form-group">
+            <div class="col-md-2 text-right">
+                @Html.LabelFor(x => x.Provider, new { @class = "control-label" })
+            </div>
+            <div class="col-md-8">
+                @Html.DropDownListFor(x => x.Provider, Helper.GetProviders(), "None", new { placeholder = "Providers", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-2 text-right">
+                <i class="fa fa-user"></i>
+                @Html.LabelFor(x => x.Users, new { @class = "control-label" })
+            </div>
+            <div class="col-md-8">
+                @Html.ListBoxFor(x => x.Users, Helper.GetUsers(6), new { placeholder = "None", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-2 text-right">
+                <i class="fa fa-users"></i>
+                @Html.LabelFor(x => x.Events, new { @class = "control-label" })
+            </div>
+            <div class="col-md-8">
+                @Html.ListBoxFor(x => x.Events, Helper.GetEvents(6), new { placeholder = "None", @class = "form-control" })
+            </div>
+        </div>
+        <hr />
+        <div id="ContentEditor">
+            <div class="item html hidden">
+                @Html.Partial("ContentEditor/Html")
+            </div>
+            <div class="item sms hidden">
+                @Html.Partial("ContentEditor/SMS")
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-push-2 col-md-8 text-right">
+                <button type="submit" class="btn btn-primary" style="min-width: 100px;">Send</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(function () {
+
+        providerChanged(true);
+
+        $('#Provider').on('change', function () {
+            providerChanged(false);
+        });
+
+        $('#ComposeForm').on('submit', function () {
+
+            $(this).find('button[type=submit]').prop('disabled', true);
+
+            var params = $(this).serialize();
+
+            $('.result-panel').empty();
+
+            $.post($(this).attr('action'), params, function (res) {
+
+                $('#ComposeForm').find('button[type=submit]').prop('disabled', false);
+
+
+                if (!res || !res.IsSuccess) {
+                    $('.result-panel').append('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + res.Error + '</div>');
+                    console.warn(res.Error, res.ErrorDetails);
+                    return;
+                }
+
+
+                $('.result-panel').append('<div class="alert alert-success"><i class="fa fa-paper-plane-o"></i> ' + res.MessageIds.length + ' Message' + (res.MessageIds.length > 1 ? 's' : '') + ' created successfully! <a target="_blank" href="/Message/Index/' + res.MessageIds + '" class="pull-right">View Details <i class="fa fa-angle-double-right"></i></a></div>')
+                console.log(res.MessageIds);
+            });
+
+            return false;
+        });
+
+
+        function providerChanged(isFirstCall) {
+
+            $('#ContentEditor .item').addClass('hidden');
+            $('#ComposeForm button[type=submit]').prop('disabled', true);
+
+            if (!isFirstCall)
+                $('#ComposeForm [name=Subject],#ComposeForm [name=Message]').prop('disabled', true);
+
+            var selector;
+            var value = $('#Provider').val();
+
+
+            if (value == 1 || value == 4)
+                selector = '#ContentEditor .item.html';
+
+            if (value == 2 || value == 3)
+                selector = '#ContentEditor .item.sms';
+
+
+            if (selector) {
+                $(selector).removeClass('hidden');
+                $('#ComposeForm button[type=submit]').prop('disabled', false);
+                $(selector).find('[name=Subject]').prop('disabled', false);
+                $(selector).find('[name=Message]').prop('disabled', false);
+
+            }
+        }
+    })
+</script>

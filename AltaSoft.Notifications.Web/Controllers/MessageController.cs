@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.Mvc;
 using AltaSoft.Notifications.DAL;
 using AltaSoft.Notifications.DAL.Context;
+using AltaSoft.Notifications.Web.Models;
+using AltaSoft.Notifications.Web.Common;
 
 namespace AltaSoft.Notifications.Web.Controllers
 {
@@ -16,10 +18,26 @@ namespace AltaSoft.Notifications.Web.Controllers
         private MainDbContext db = new MainDbContext();
 
         // GET: Message
-        public ActionResult Index()
+        public ActionResult Index(string id)
         {
-            var messages = db.Messages.Include(m => m.Provider).Include(m => m.User);
-            return View(messages.ToList());
+            int i;
+            var messageIds = new List<int>();
+
+            if (!String.IsNullOrEmpty(id))
+            {
+                id.Split(',').ToList().ForEach(x =>
+                {
+                    if (Int32.TryParse(x, out i))
+                        messageIds.Add(i);
+                });
+            }
+
+            using (var bo = new MessageBusinessObject())
+            {
+                var model = bo.GetList(x => messageIds.Count == 0 || messageIds.Contains(x.Id));
+
+                return View(model);
+            }
         }
 
         // GET: Message/Details/5
@@ -36,6 +54,95 @@ namespace AltaSoft.Notifications.Web.Controllers
             }
             return View(message);
         }
+
+
+        public ActionResult Compose()
+        {
+            var model = new ComposeModel();
+
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult Compose(ComposeModel model)
+        {
+            try
+            {
+                if ((model.Provider == 1 || model.Provider == 4) && String.IsNullOrEmpty(model.Subject))
+                    throw new Exception("Please fill - Subject");
+
+                if (String.IsNullOrEmpty(model.Message))
+                    throw new Exception("Please fill - Message");
+
+                if (model.Users == null)
+                    model.Users = new List<int>();
+
+                if (model.Events != null && model.Events.Count > 0)
+                {
+                    using (var bo = new SubscriptionBusinessObject())
+                    {
+                        var eventUserIds = bo.GetList(x => model.Events.Contains(x.EventId) && x.ProviderId == model.Provider).Select(x => x.UserId).ToList();
+                        model.Users.AddRange(eventUserIds);
+
+                        model.Users = model.Users.Distinct().ToList();
+                    }
+                }
+
+                var users = new List<DAL.User>();
+
+                using (var bo = new UserBusinessObject())
+                    users = bo.GetList(x => model.Users.Contains(x.Id));
+
+                if (users.Count == 0)
+                    throw new Exception("Users must be selected");
+
+
+
+                var applicationId = 6;
+                var resultIds = new List<int>();
+
+                using (var bo = new MessageBusinessObject())
+                {
+                    var groupId = Guid.NewGuid();
+
+                    users.ForEach(u =>
+                    {
+                        var message = new Message
+                        {
+                            UserId = u.Id,
+                            To = Helper.GetToByProvider(u, model.Provider),
+                            ProviderId = model.Provider,
+                            ApplicationId = applicationId,
+                            Subject = model.Subject,
+                            Content = model.Message,
+                            ProcessDate = DateTime.Now,
+                            GroupId = groupId,
+                            Priority = MessagePriority.Normal
+                        };
+
+                        resultIds.Add(bo.Create(message));
+                    });
+                }
+
+
+                return Json(new
+                {
+                    IsSuccess = true,
+                    MessageIds = resultIds
+                },
+                JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    IsSuccess = false,
+                    Error = ex.Message,
+                    ErrorDetails = ex.ToString()
+                },
+                JsonRequestBehavior.AllowGet);
+            }
+        }
+
 
         // GET: Message/Create
         public ActionResult Create()

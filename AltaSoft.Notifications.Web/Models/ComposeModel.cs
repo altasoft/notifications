@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace AltaSoft.Notifications.Web.Models
 {
@@ -13,6 +14,7 @@ namespace AltaSoft.Notifications.Web.Models
         public List<int> Events { get; set; }
         public int Provider { get; set; }
         public string Subject { get; set; }
+        [AllowHtml]
         public string Message { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AltaSoft.Notifications.DAL;
+using AltaSoft.Notifications.Web.Common;
 using AltaSoft.Notifications.Web.Models.API;
 using System;
 using System.Collections.Generic;
@@ -68,7 +69,7 @@ namespace AltaSoft.Notifications.Web.Controllers
                     using (var bo = new SubscriptionBusinessObject())
                     {
                         var items = bo.GetList(x => x.EventId == ev.Id);
-                        userInfos.AddRange(items.ConvertAll(x => new Tuple<int?, string>(x.UserId, GetToByProvider(x.User, x.ProviderId))));
+                        userInfos.AddRange(items.ConvertAll(x => new Tuple<int?, string>(x.UserId, Helper.GetToByProvider(x.User, x.ProviderId))));
                     }
                 }
 
@@ -566,7 +567,7 @@ namespace AltaSoft.Notifications.Web.Controllers
                     if (user == null)
                         continue;
 
-                    var to = GetToByProvider(user, providerId);
+                    var to = Helper.GetToByProvider(user, providerId);
                     if (String.IsNullOrEmpty(to))
                         continue;
 
@@ -575,18 +576,6 @@ namespace AltaSoft.Notifications.Web.Controllers
             }
 
             return result;
-        }
-
-        string GetToByProvider(User user, int providerId)
-        {
-            switch (providerId)
-            {
-                case 1: return user.Email;
-                case 2: return user.MobileNumber;
-                case 3: return user.ExternalUserId;
-                case 4: return user.Email;
-                default: return String.Empty;
-            }
         }
     }
 }

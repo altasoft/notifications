@@ -31,13 +31,6 @@ namespace AltaSoft.Notifications.Web.Controllers
             return View();
         }
 
-        public ActionResult Compose()
-        {
-            var model = new ComposeModel();
-
-            return View(model);
-        }
-
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";

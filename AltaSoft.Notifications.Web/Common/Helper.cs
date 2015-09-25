@@ -44,5 +44,17 @@ namespace AltaSoft.Notifications.Web.Common
                 }).ToList();
             }
         }
+
+        public static string GetToByProvider(User user, int providerId)
+        {
+            switch (providerId)
+            {
+                case 1: return user.Email;
+                case 2: return user.MobileNumber;
+                case 3: return user.ExternalUserId;
+                case 4: return user.Email;
+                default: return String.Empty;
+            }
+        }
     }
 }
