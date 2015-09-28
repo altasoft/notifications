@@ -10,6 +10,7 @@ using AltaSoft.Notifications.DAL;
 using AltaSoft.Notifications.DAL.Context;
 using AltaSoft.Notifications.Web.Models;
 using AltaSoft.Notifications.Web.Common;
+using System.IO;
 
 namespace AltaSoft.Notifications.Web.Controllers
 {
@@ -69,6 +70,11 @@ namespace AltaSoft.Notifications.Web.Controllers
             {
                 if ((model.Provider == 1 || model.Provider == 4) && String.IsNullOrEmpty(model.Subject))
                     throw new Exception("Please fill - Subject");
+
+
+                if (!String.IsNullOrWhiteSpace(model.FileContent)) {
+                    model.Message = model.FileContent;
+                }
 
                 if (String.IsNullOrEmpty(model.Message))
                     throw new Exception("Please fill - Message");

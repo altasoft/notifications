@@ -27,6 +27,7 @@ namespace AltaSoft.Notifications.DAL
 
         public void LoadReferences(Message item)
         {
+            db.Messages.Attach(item);
             db.Entry(item).Reference(x => x.Provider).Load();
             db.Entry(item).Reference(x => x.User).Load();
             db.Entry(item).Reference(x => x.Application).Load();

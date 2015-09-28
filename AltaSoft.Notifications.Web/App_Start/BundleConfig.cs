@@ -11,6 +11,7 @@ namespace AltaSoft.Notifications.Web
             bundles.Add(new ScriptBundle("~/bundles/js").Include(
                       "~/Scripts/jquery-{version}.js",
                       "~/Scripts/bootstrap.js",
+                      "~/Scripts/bootstrap-datepicker.js",
                       "~/Scripts/select2.js",
                       "~/Scripts/respond.js",
                       //"~/Scripts/tinymce/tinymce.js",

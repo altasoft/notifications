@@ -1,0 +1,72 @@
+﻿@model ComposeModel
+
+<div class="form-group">
+    <div class="col-md-push-2 col-md-6">
+        @Html.TextBoxFor(x => x.Subject, new { placeholder = "Subject", @class = "form-control" })
+    </div>
+
+    <div class="col-md-push-2 col-md-2">
+        <select class="form-control" id="MessageType">
+            <option value="1">Editor</option>
+            <option value="2">File</option>
+        </select>
+    </div>
+</div>
+<div id="MessageEditorOption">
+    <div class="form-group">
+        <div class="col-md-push-2 col-md-8">
+            @Html.TextAreaFor(x => x.Message, new { placeholder = "Message", @class = "form-control" })
+        </div>
+    </div>
+</div>
+<div id="MessageFileOption" style="display: none;">
+    <div class="form-group">
+        <div class="col-md-push-2 col-md-8">
+            <input type="file" name="file" id="MessageFile" />
+            @Html.HiddenFor(x => x.FileContent)
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        CKEDITOR.replace('Message');
+
+        $('#ComposeForm').on('submit', function () {
+            var $textarea = $('#Message');
+            $textarea.val(CKEDITOR.instances[$textarea.attr('name')].getData());
+        });
+    })
+
+    $('#MessageType').on('change', function () {
+
+        if ($(this).val() == 1) {
+
+            $('#MessageEditorOption').show();
+            $('#MessageFileOption').hide();
+            $('#MessageFile').val('');
+            $('#FileContent').val('');
+        }
+        else {
+
+            $('#MessageEditorOption').hide();
+            $('#MessageFileOption').show();
+        }
+
+    });
+
+    $('#MessageFile').on('change', function ()  {
+
+        var file = $('#MessageFile')[0].files[0]; // FileList object
+        if (!file) return;
+
+        var reader = new FileReader();
+
+        reader.onload = function (evt) {
+            if (evt.target.readyState != FileReader.DONE) return;
+
+            $('#FileContent').val(evt.target.result);
+        };
+
+        reader.readAsBinaryString(file);
+    });
+</script>
