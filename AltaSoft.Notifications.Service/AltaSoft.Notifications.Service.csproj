@@ -107,25 +107,17 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Topshelf, Version=3.2.150.0, Culture=neutral, PublicKeyToken=b800c4cfcdeea87b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Topshelf.3.2.0\lib\net40-full\Topshelf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\IProviderManager.cs" />
     <Compile Include="Common\ProviderProcessResult.cs" />
     <Compile Include="Hubs\RealtimeHub.cs" />
-    <Compile Include="Service\ProjectInstaller.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Service\ProjectInstaller.Designer.cs">
-      <DependentUpon>ProjectInstaller.cs</DependentUpon>
-    </Compile>
     <Compile Include="ProviderManagers\SmtpMailProviderManager.cs" />
     <Compile Include="ProviderManagers\SignalrProviderManager.cs" />
-    <Compile Include="Service\NotificationsService.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Service\NotificationsService.Designer.cs">
-      <DependentUpon>NotificationsService.cs</DependentUpon>
-    </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="WorkerManager.cs" />
     <Compile Include="Program.cs" />
@@ -142,11 +134,6 @@
       <Project>{140b7736-3c18-4d8f-b7c2-100be71fedaf}</Project>
       <Name>AltaSoft.Notifications.DAL</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Service\ProjectInstaller.resx">
-      <DependentUpon>ProjectInstaller.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
