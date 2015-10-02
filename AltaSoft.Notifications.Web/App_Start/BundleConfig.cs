@@ -15,7 +15,7 @@ namespace AltaSoft.Notifications.Web
                       "~/Scripts/select2.js",
                       "~/Scripts/respond.js",
                       //"~/Scripts/tinymce/tinymce.js",
-                      "~/Scripts/ckeditor/ckeditor.js",
+                      //"~/Scripts/ckeditor/ckeditor.js",
                       "~/Scripts/altasoft.common.js"
                       ));
 

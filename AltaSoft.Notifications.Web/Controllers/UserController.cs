@@ -11,6 +11,7 @@ using AltaSoft.Notifications.DAL.Context;
 
 namespace AltaSoft.Notifications.Web.Controllers
 {
+    [Authorize]
     public class UserController : Controller
     {
         private MainDbContext db = new MainDbContext();

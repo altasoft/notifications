@@ -14,6 +14,7 @@ using System.IO;
 
 namespace AltaSoft.Notifications.Web.Controllers
 {
+    [Authorize]
     public class MessageController : Controller
     {
         private MainDbContext db = new MainDbContext();
@@ -103,7 +104,7 @@ namespace AltaSoft.Notifications.Web.Controllers
 
 
 
-                var applicationId = 6;
+                var applicationId = UserContext.Current.ApplicationId.Value;
                 var resultIds = new List<int>();
 
                 using (var bo = new MessageBusinessObject())

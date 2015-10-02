@@ -8,114 +8,122 @@ using System.Web;
 using System.Web.Mvc;
 using AltaSoft.Notifications.DAL;
 using AltaSoft.Notifications.DAL.Context;
-using System.Threading;
+using AltaSoft.Notifications.Web.Common;
 
 namespace AltaSoft.Notifications.Web.Controllers
 {
     [Authorize]
-    public class ApplicationController : Controller
+    public class EventController : Controller
     {
         private MainDbContext db = new MainDbContext();
 
-        // GET: Application
+        // GET: Event
         public ActionResult Index()
         {
-            Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
-
-            return View(db.Applications.ToList());
+            var events = db.Events.Include(x => x.Application);
+            return View(events.ToList());
         }
 
-        // GET: Application/Details/5
+        // GET: Event/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Application application = db.Applications.Find(id);
-            if (application == null)
+            Event @event = db.Events.Find(id);
+            if (@event == null)
             {
                 return HttpNotFound();
             }
-            return View(application);
+            return View(@event);
         }
 
-        // GET: Application/Create
+        // GET: Event/Create
         public ActionResult Create()
         {
-            return View();
+            var model = new Event
+            {
+                ApplicationId = UserContext.Current.ApplicationId.Value
+            };
+
+            return View(model);
         }
 
-        // POST: Application/Create
+        // POST: Event/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,SecretKey,Username,Password,CheckUserIdUrl,EmailFromAddress,EmailFromFullName,RegDate,LastUpdateDate,RowVersion")] Application application)
+        public ActionResult Create([Bind(Include = "Id,ApplicationId,Key,Description,IsSystem,RegDate,LastUpdateDate")] Event @event)
         {
             if (ModelState.IsValid)
             {
-                db.Applications.Add(application);
+                @event.ApplicationId = UserContext.Current.ApplicationId.Value;
+                db.Events.Add(@event);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(application);
+            ViewBag.ApplicationId = new SelectList(db.Applications, "Id", "SecretKey", @event.ApplicationId);
+            return View(@event);
         }
 
-        // GET: Application/Edit/5
+        // GET: Event/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Application application = db.Applications.Find(id);
-            if (application == null)
+            Event @event = db.Events.Find(id);
+            if (@event == null)
             {
                 return HttpNotFound();
             }
-            return View(application);
+            ViewBag.ApplicationId = new SelectList(db.Applications, "Id", "SecretKey", @event.ApplicationId);
+            return View(@event);
         }
 
-        // POST: Application/Edit/5
+        // POST: Event/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,SecretKey,Username,Password,CheckUserIdUrl,EmailFromAddress,EmailFromFullName,RegDate,LastUpdateDate,RowVersion")] Application application)
+        public ActionResult Edit([Bind(Include = "Id,ApplicationId,Key,Description,IsSystem,RegDate,LastUpdateDate")] Event @event)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(application).State = EntityState.Modified;
+                db.Entry(@event).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(application);
+            ViewBag.ApplicationId = new SelectList(db.Applications, "Id", "SecretKey", @event.ApplicationId);
+            return View(@event);
         }
 
-        // GET: Application/Delete/5
+        // GET: Event/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Application application = db.Applications.Find(id);
-            if (application == null)
+            Event @event = db.Events.Find(id);
+            if (@event == null)
             {
                 return HttpNotFound();
             }
-            return View(application);
+            return View(@event);
         }
 
-        // POST: Application/Delete/5
+        // POST: Event/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Application application = db.Applications.Find(id);
-            db.Applications.Remove(application);
+            Event @event = db.Events.Find(id);
+            db.Events.Remove(@event);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
