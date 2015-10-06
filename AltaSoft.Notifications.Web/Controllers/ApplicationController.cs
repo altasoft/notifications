@@ -12,7 +12,6 @@ using System.Threading;
 
 namespace AltaSoft.Notifications.Web.Controllers
 {
-    [Authorize]
     public class ApplicationController : Controller
     {
         private MainDbContext db = new MainDbContext();

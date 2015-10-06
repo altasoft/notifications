@@ -2,6 +2,21 @@
 
 <div class="form-group">
     <div class="col-md-push-2 col-md-8">
-        @Html.TextAreaFor(x => x.Message, new { placeholder = "Message", @class = "form-control" })
+        @Html.TextAreaFor(x => x.Message, new { placeholder = "Message", @class = "sms form-control", style = "min-height: 150px;", length = 160 })
+        <div id="MessageLength" style="opacity: .7; margin-top: 10px;">
+            <span></span> Symbols Left
+        </div>
     </div>
 </div>
+<script>
+    function checkMessageLength() {
+        var count = 160 - $('#Message.sms').val().length;
+
+        $('#MessageLength span').html(160 - $('#Message.sms').val().length);
+        $('#MessageLength').css('color', count < 0 ? 'red' : 'black');
+        $('#MessageLength').css('opacity', count < 0 ? '1' : '.7');
+    }
+    $('#Message.sms').on('keyup', checkMessageLength);
+    $('#Message.sms').on('change', checkMessageLength);
+    checkMessageLength();
+</script>
