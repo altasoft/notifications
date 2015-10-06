@@ -47,7 +47,7 @@ namespace AltaSoft.Notifications.Service.ProviderManagers
             {
                 product = (message.ForceSendingNow == true) ? message.Application.SMSServiceProductAnyTime : message.Application.SMSServiceProductLimited,
                 refNum = message.Id.ToString(),
-                smsPhone = message.To,
+                smsPhone = message.To.Trim('+', ' '),
                 smsText = message.Content,
                 source_number_or_name = message.Application.SMSFromName,
                 ttl = 11,
@@ -62,6 +62,9 @@ namespace AltaSoft.Notifications.Service.ProviderManagers
                 sms.sendFromTime = message.ProcessDate.Value.ToString(EN_US_CULTURE);
                 sms.sendToTime = message.ProcessDate.Value.AddDays(1).ToString(EN_US_CULTURE);
             }
+
+            if (sms.smsPhone.Length > 9)
+                sms.smsPhone = sms.smsPhone.Substring(sms.smsPhone.Length - 9, 9);
 
 
             // 3. Send
