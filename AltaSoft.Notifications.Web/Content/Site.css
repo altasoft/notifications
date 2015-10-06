@@ -56,3 +56,10 @@ footer {
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+
+.submenu {
+    background: #ECECEC;
+    border-bottom: 1px solid #DADADA;
+    font-size: 15px;
+}

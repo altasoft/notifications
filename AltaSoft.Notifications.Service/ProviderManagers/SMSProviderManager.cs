@@ -9,12 +9,15 @@ using System.ComponentModel.Composition;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Globalization;
 
 namespace AltaSoft.Notifications.Service.ProviderManagers
 {
     [Export(typeof(IProviderManager))]
     public class SMSProviderManager : IProviderManager
     {
+        static CultureInfo EN_US_CULTURE = new CultureInfo("en-US");
+
         public int Id
         {
             get { return 2; }
@@ -32,6 +35,11 @@ namespace AltaSoft.Notifications.Service.ProviderManagers
             if (String.IsNullOrEmpty(message.Application.SMSFromName))
                 throw new Exception("Application Configuration Issue: SMSFromName not defined for SMS service");
 
+            if (message.ForceSendingNow != true && String.IsNullOrEmpty(message.Application.SMSServiceProductLimited))
+                throw new Exception("Application Configuration Issue: SMSServiceProductLimited not defined for SMS service");
+
+            if (message.ForceSendingNow == true && String.IsNullOrEmpty(message.Application.SMSServiceProductAnyTime))
+                throw new Exception("Application Configuration Issue: SMSServiceProductAnyTime not defined for SMS service");
 
 
             // 2. Message
@@ -42,28 +50,51 @@ namespace AltaSoft.Notifications.Service.ProviderManagers
                 smsPhone = message.To,
                 smsText = message.Content,
                 source_number_or_name = message.Application.SMSFromName,
+                ttl = 11,
+                sendFromTime = DateTime.Now.AddDays(-1).ToString(EN_US_CULTURE),
+                sendToTime = DateTime.Now.AddDays(1).ToString(EN_US_CULTURE),
+                state = 1,
                 for_test = false
             };
 
             if (message.ProcessDate.HasValue)
-                sms.sendFromTime = message.ProcessDate;
-
+            {
+                sms.sendFromTime = message.ProcessDate.Value.ToString(EN_US_CULTURE);
+                sms.sendToTime = message.ProcessDate.Value.AddDays(1).ToString(EN_US_CULTURE);
+            }
 
 
             // 3. Send
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("X-AS-CID", message.Application.SMSServiceCustomerId.ToString());
+            var url = message.Provider.WebUrl + "?" + sms.GetQueryString();
 
-            var response = await client.PutAsJsonAsync(message.Provider.WebUrl, sms);
-            var result = await response.Content.ReadAsStringAsync();
+            var result = this.CallServiceGet(url, message.Application.SMSServiceCustomerId.Value, HttpMethod.Put);
 
-            if (result != null && result.ToLower() == "ok")
+            if (result != null && result.Trim('"').ToLower() == "ok")
                 return new ProviderProcessResult { IsSuccess = true };
 
 
             return new ProviderProcessResult { IsSuccess = false, ErrorMessage = result, ErrorDetails = result };
         }
 
+
+        string CallServiceGet(string url, int customerID, HttpMethod method = null)
+        {
+            HttpClient client = new HttpClient();
+
+            if (method == null)
+                method = HttpMethod.Get;
+
+            var request = new HttpRequestMessage()
+            {
+                RequestUri = new Uri(url),
+                Method = method,
+            };
+            request.Headers.Add("X-AS-CID", customerID.ToString());
+
+            var response = client.SendAsync(request).Result;
+            var res = response.Content.ReadAsStringAsync().Result;
+            return res;
+        }
 
         class SMS
         {
@@ -73,8 +104,8 @@ namespace AltaSoft.Notifications.Service.ProviderManagers
             public string smsText { get; set; }
             public string source_number_or_name { get; set; }
             public int? ttl { get; set; }
-            public DateTime? sendFromTime { get; set; }
-            public DateTime? sendToTime { get; set; }
+            public string sendFromTime { get; set; }
+            public string sendToTime { get; set; }
             public int? state { get; set; }
             public bool? for_test { get; set; }
         }

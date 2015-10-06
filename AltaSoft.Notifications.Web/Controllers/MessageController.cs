@@ -14,7 +14,6 @@ using System.IO;
 
 namespace AltaSoft.Notifications.Web.Controllers
 {
-    [Authorize]
     public class MessageController : Controller
     {
         private MainDbContext db = new MainDbContext();
