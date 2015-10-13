@@ -9,7 +9,7 @@ namespace AltaSoft.Notifications.Service.Common
     public class ProviderProcessResult
     {
         public bool IsSuccess { get; set; }
+        public string ErrorCode { get; set; }
         public string ErrorMessage { get; set; }
-        public string ErrorDetails { get; set; }
     }
 }

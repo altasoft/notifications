@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace AltaSoft.Notifications.Service.Common
 {
-    public interface IProviderManager
+    public interface IProviderManager<TMessage>
     {
         int Id { get; }
 
-        Task<ProviderProcessResult> Process(Message message);
+        Task<ProviderProcessResult> Process(TMessage message);
     }
 }

@@ -1,5 +1,7 @@
-﻿using Microsoft.Owin.Hosting;
+﻿using AltaSoft.Notifications.Service.Workers;
+using Microsoft.Owin.Hosting;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using Topshelf;
 
@@ -7,10 +9,16 @@ namespace AltaSoft.Notifications.Service
 {
     class Program
     {
-        static WorkerManager normalWorker, highPriorityWorker;
+        static List<IWorker> workers;
 
         static void Main(string[] args)
         {
+            workers = new List<IWorker>();
+            workers.Add(new SMSWorker(1));
+            workers.Add(new SMSWorker(0));
+            workers.Add(new DefaultWorker(1));
+            workers.Add(new DefaultWorker(0));
+
             HostFactory.Run(x =>
             {
                 x.Service<object>(s =>
@@ -27,24 +35,17 @@ namespace AltaSoft.Notifications.Service
             });
         }
 
-
         static void Start()
         {
-            var url = ConfigurationManager.AppSettings["SignalrUrl"];
+            workers.ForEach(x => x.Start());
 
-            normalWorker = new WorkerManager(DAL.MessagePriority.Normal);
-            highPriorityWorker = new WorkerManager(DAL.MessagePriority.High);
-
-            normalWorker.Start();
-            highPriorityWorker.Start();
-
-            WebApp.Start(url);
+            WebApp.Start(ConfigurationManager.AppSettings["SignalrUrl"]);
         }
 
         static void Stop()
         {
-            normalWorker.Stop();
-            highPriorityWorker.Stop();
+            workers.ForEach(x => x.Stop());
+
             Environment.Exit(0);
         }
     }

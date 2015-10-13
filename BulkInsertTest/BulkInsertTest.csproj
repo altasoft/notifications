@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{140B7736-3C18-4D8F-B7C2-100BE71FEDAF}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{263D2BF8-0F1A-4087-8763-3768E3D3987E}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AltaSoft.Notifications.DAL</RootNamespace>
-    <AssemblyName>AltaSoft.Notifications.DAL</AssemblyName>
+    <RootNamespace>BulkInsertTest</RootNamespace>
+    <AssemblyName>BulkInsertTest</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,17 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" />
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,34 +45,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BusinessObjects\ApplicationBusinessObject.cs" />
-    <Compile Include="BusinessObjects\ProviderBusinessObject.cs" />
-    <Compile Include="BusinessObjects\EventBusinessObject.cs" />
-    <Compile Include="BusinessObjects\SMSBusinessObject.cs" />
-    <Compile Include="BusinessObjects\UserBusinessObject.cs" />
-    <Compile Include="BusinessObjects\MessageBusinessObject.cs" />
-    <Compile Include="Common\BusinessObjectBase.cs" />
-    <Compile Include="Context\MainContext.cs" />
-    <Compile Include="Models\ApplicationProduct.cs" />
-    <Compile Include="Models\Application.cs" />
-    <Compile Include="Common\ModelBase.cs" />
-    <Compile Include="Models\Enums\MessagePriority.cs" />
-    <Compile Include="Models\Enums\MessageStates.cs" />
-    <Compile Include="Models\IProviderInfo.cs" />
-    <Compile Include="Models\UserGroup.cs" />
-    <Compile Include="Models\Event.cs" />
-    <Compile Include="Models\Message.cs" />
-    <Compile Include="Models\Provider.cs" />
-    <Compile Include="Models\SMS.cs" />
-    <Compile Include="Models\Subscription.cs" />
-    <Compile Include="Models\User.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

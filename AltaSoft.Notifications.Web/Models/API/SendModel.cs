@@ -17,6 +17,7 @@ namespace AltaSoft.Notifications.Web.Models.API
         public string Subject { get; set; }
         public string Content { get; set; }
         public DateTime? ProcessDate { get; set; }
-        public MessagePriority? Priority { get; set; }
+        public int Priority { get; set; }
+        public bool IsTest { get; set; }
     }
 }

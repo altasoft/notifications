@@ -10,7 +10,7 @@ namespace AltaSoft.Notifications.DAL
     /// <summary>
     /// Queue to process send requests
     /// </summary>
-    public class Message : ModelBase
+    public class Message : ModelBase, IProviderInfo
     {
         public int? UserId { get; set; }
         public User User { get; set; }
@@ -53,5 +53,7 @@ namespace AltaSoft.Notifications.DAL
         /// for SMS Service, to send it immediately
         /// </summary>
         public bool? ForceSendingNow { get; set; }
+
+        public bool IsTest { get; set; }
     }
 }

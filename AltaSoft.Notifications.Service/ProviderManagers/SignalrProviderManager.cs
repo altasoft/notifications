@@ -13,8 +13,7 @@ using System.Runtime.CompilerServices;
 
 namespace AltaSoft.Notifications.Service.ProviderManagers
 {
-    [Export(typeof(IProviderManager))]
-    public class SignalrProviderManager : IProviderManager
+    public class SignalrProviderManager : IProviderManager<Message>
     {
         public int Id
         {

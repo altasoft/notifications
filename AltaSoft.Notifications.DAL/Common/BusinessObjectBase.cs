@@ -48,8 +48,22 @@ namespace AltaSoft.Notifications.DAL.Common
             db.SaveChanges();
         }
 
+        public virtual List<int> BulkInsert(List<TEntity> entities)
+        {
+            entities.ForEach(entity =>
+            {
+                entity.RegDate = DateTime.Now;
+                entity.LastUpdateDate = null;
+            });
 
-        public virtual TEntity GetById(int id)
+            db.Set<TEntity>().AddRange(entities);
+            db.SaveChanges();
+
+            return entities.Select(x => x.Id).ToList();
+        }
+
+
+        public virtual TEntity GetById(int? id)
         {
             var item = db.Set<TEntity>().AsNoTracking().FirstOrDefault(x => x.Id == id);
 

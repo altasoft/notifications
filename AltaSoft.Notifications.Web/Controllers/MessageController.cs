@@ -84,13 +84,13 @@ namespace AltaSoft.Notifications.Web.Controllers
 
                 if (model.Events != null && model.Events.Count > 0)
                 {
-                    using (var bo = new SubscriptionBusinessObject())
-                    {
-                        var eventUserIds = bo.GetList(x => model.Events.Contains(x.EventId) && x.ProviderId == model.Provider).Select(x => x.UserId).ToList();
-                        model.Users.AddRange(eventUserIds);
+                    //using (var bo = new SubscriptionBusinessObject())
+                    //{
+                    //    var eventUserIds = bo.GetList(x => model.Events.Contains(x.EventId) && x.ProviderId == model.Provider).Select(x => x.UserId).ToList();
+                    //    model.Users.AddRange(eventUserIds);
 
-                        model.Users = model.Users.Distinct().ToList();
-                    }
+                    //    model.Users = model.Users.Distinct().ToList();
+                    //}
                 }
 
                 var users = new List<DAL.User>();

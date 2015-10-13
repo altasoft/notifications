@@ -25,9 +25,12 @@ namespace AltaSoft.Notifications.Web.Controllers
                 if (model == null)
                     throw new Exception("Please pass model");
 
+
+                Application application;
                 using (var bo = new ApplicationBusinessObject())
                 {
-                    if (!bo.Check(model.ApplicationId, model.ApplicationSecretKey))
+                    application = bo.GetById(model.ApplicationId);
+                    if (application == null || application.SecretKey != model.ApplicationSecretKey)
                         throw new Exception("Invalid application credentials");
                 }
 
@@ -54,50 +57,81 @@ namespace AltaSoft.Notifications.Web.Controllers
                 var userInfos = GetUserInfos(model.ApplicationId, model.ExternalUserIds, provider.Id);
 
                 if (!String.IsNullOrEmpty(model.To))
-                    userInfos.Add(new Tuple<int?, string>(null, model.To));
-
-
-                Event ev = null;
-                if (!String.IsNullOrEmpty(model.EventKey))
                 {
-                    using (var bo = new EventBusinessObject())
-                        ev = bo.GetByKey(model.ApplicationId, model.EventKey);
+                    model.To.Split(',').ToList().ForEach(x => userInfos.Add(new Tuple<int?, string>(null, x)));
                 }
 
-                if (ev != null)
-                {
-                    using (var bo = new SubscriptionBusinessObject())
-                    {
-                        var items = bo.GetList(x => x.EventId == ev.Id);
-                        userInfos.AddRange(items.ConvertAll(x => new Tuple<int?, string>(x.UserId, Helper.GetToByProvider(x.User, x.ProviderId))));
-                    }
-                }
+
+
+
+                //Event ev = null;
+                //if (!String.IsNullOrEmpty(model.EventKey))
+                //{
+                //    using (var bo = new EventBusinessObject())
+                //        ev = bo.GetByKey(model.ApplicationId, model.EventKey);
+                //}
+
+                //if (ev != null)
+                //{
+                //    using (var bo = new SubscriptionBusinessObject())
+                //    {
+                //        var items = bo.GetList(x => x.EventId == ev.Id);
+                //        userInfos.AddRange(items.ConvertAll(x => new Tuple<int?, string>(x.UserId, Helper.GetToByProvider(x.User, x.ProviderId))));
+                //    }
+                //}
 
 
                 //if (userInfos.Count == 0)
                 //    throw new Exception("No Users found to send. Please set: ExternalUserId, ExternalUserIds, To, or EventKey");
 
+
                 var groupId = Guid.NewGuid();
 
-                foreach (var info in userInfos)
+                // თუ SMS-ების გაგზავნაა
+                if (provider.Id == 2)
                 {
-                    var message = new Message
+                    using (var bo = new SMSBusinessObject())
                     {
-                        UserId = info.Item1,
-                        To = info.Item2,
-                        ProviderId = provider.Id,
-                        ApplicationId = model.ApplicationId,
-                        Subject = model.Subject,
-                        Content = model.Content,
-                        ProcessDate = model.ProcessDate,
-                        GroupId = groupId,
-                        Priority = model.Priority ?? MessagePriority.Normal
-                    };
+                        var smsItems = userInfos.Select(x => new SMS
+                        {
+                            To = x.Item2,
+                            ProviderId = provider.Id,
+                            GroupId = groupId,
+                            SenderNumber = application.SMSSenderNumber,
+                            ApplicationProductId = null,
+                            ApplicationId = model.ApplicationId,
+                            Message = model.Content,
+                            ProcessDate = model.ProcessDate,
+                            Priority = model.Priority,
+                            IsTest = model.IsTest
+                        }).ToList();
 
-                    using (var bo = new MessageBusinessObject())
+                        messageIds = bo.BulkInsert(smsItems);
+                    }
+                }
+                else
+                {
+                    foreach (var info in userInfos)
                     {
-                        var id = bo.Create(message);
-                        messageIds.Add(id);
+                        var message = new Message
+                        {
+                            UserId = info.Item1,
+                            To = info.Item2,
+                            ProviderId = provider.Id,
+                            ApplicationId = model.ApplicationId,
+                            Subject = model.Subject,
+                            Content = model.Content,
+                            ProcessDate = model.ProcessDate,
+                            GroupId = groupId,
+                            Priority = (MessagePriority)model.Priority,
+                            IsTest = model.IsTest
+                        };
+
+                        using (var bo = new MessageBusinessObject())
+                        {
+                            var id = bo.Create(message);
+                            messageIds.Add(id);
+                        }
                     }
                 }
             }
@@ -310,17 +344,17 @@ namespace AltaSoft.Notifications.Web.Controllers
                 }
 
 
-                var subscription = new Subscription
-                {
-                    EventId = eventId,
-                    UserId = userId,
-                    ProviderId = provider.Id
-                };
+                //var subscription = new Subscription
+                //{
+                //    EventId = eventId,
+                //    UserId = userId,
+                //    ProviderId = provider.Id
+                //};
 
-                using (var bo = new SubscriptionBusinessObject())
-                {
-                    bo.Save(subscription);
-                }
+                //using (var bo = new SubscriptionBusinessObject())
+                //{
+                //    bo.Save(subscription);
+                //}
 
             }
             catch (Exception ex)
@@ -377,17 +411,17 @@ namespace AltaSoft.Notifications.Web.Controllers
                 }
 
 
-                var subscription = new Subscription
-                {
-                    EventId = eventId,
-                    UserId = userId,
-                    ProviderId = provider.Id
-                };
+                //var subscription = new Subscription
+                //{
+                //    EventId = eventId,
+                //    UserId = userId,
+                //    ProviderId = provider.Id
+                //};
 
-                using (var bo = new SubscriptionBusinessObject())
-                {
-                    bo.Unsubscribe(subscription);
-                }
+                //using (var bo = new SubscriptionBusinessObject())
+                //{
+                //    bo.Unsubscribe(subscription);
+                //}
 
             }
             catch (Exception ex)
@@ -468,20 +502,22 @@ namespace AltaSoft.Notifications.Web.Controllers
                     userKeys = model.ExternalUserIds.Split(',').ToList();
 
 
-                using (var bo = new SubscriptionBusinessObject())
-                {
-                    var items = bo.GetList(model.ApplicationId, eventKeys, providerKeys, userKeys);
+                //using (var bo = new SubscriptionBusinessObject())
+                //{
+                //    var items = bo.GetList(model.ApplicationId, eventKeys, providerKeys, userKeys);
 
-                    var result = items.Select(x => new SubscriptionResult
-                    {
-                        EventKey = x.Event.Key,
-                        EventDescription = x.Event.Description,
-                        ProviderKey = x.Provider.Key,
-                        ExternalUserId = x.User.ExternalUserId
-                    }).ToList();
+                //    var result = items.Select(x => new SubscriptionResult
+                //    {
+                //        EventKey = x.Event.Key,
+                //        EventDescription = x.Event.Description,
+                //        ProviderKey = x.Provider.Key,
+                //        ExternalUserId = x.User.ExternalUserId
+                //    }).ToList();
 
-                    return new APIResult<List<SubscriptionResult>>(result);
-                }
+                //    return new APIResult<List<SubscriptionResult>>(result);
+                //}
+
+                return null;
 
             }
             catch (Exception ex)

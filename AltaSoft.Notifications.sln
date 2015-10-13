@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{FDC3A88B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseBuilder", "DatabaseBuilder\DatabaseBuilder.csproj", "{93278334-3226-4879-ADFD-845863D24714}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulkInsertTest", "BulkInsertTest\BulkInsertTest.csproj", "{263D2BF8-0F1A-4087-8763-3768E3D3987E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,11 +37,16 @@ Global
 		{93278334-3226-4879-ADFD-845863D24714}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93278334-3226-4879-ADFD-845863D24714}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93278334-3226-4879-ADFD-845863D24714}.Release|Any CPU.Build.0 = Release|Any CPU
+		{263D2BF8-0F1A-4087-8763-3768E3D3987E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{263D2BF8-0F1A-4087-8763-3768E3D3987E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{263D2BF8-0F1A-4087-8763-3768E3D3987E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{263D2BF8-0F1A-4087-8763-3768E3D3987E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{93278334-3226-4879-ADFD-845863D24714} = {FDC3A88B-E98E-4996-B433-57503AE41515}
+		{263D2BF8-0F1A-4087-8763-3768E3D3987E} = {FDC3A88B-E98E-4996-B433-57503AE41515}
 	EndGlobalSection
 EndGlobal

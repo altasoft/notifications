@@ -10,11 +10,15 @@ using System.Threading.Tasks;
 namespace AltaSoft.Notifications.DAL
 {
     /// <summary>
-    /// Notification providers, SendGrid, SMS, SignalR, etc.
+    /// Event for subscribing UserGroup
     /// </summary>
-    public class Provider : ModelBase
+    public class UserGroup : ModelBase
     {
-        [Index("IX_Provider_Key", IsUnique = true), StringLength(20)]
+        [Index("IX_Group_Application_Key", 1, IsUnique = true)]
+        public int ApplicationId { get; set; }
+        public Application Application { get; set; }
+
+        [Index("IX_Group_Application_Key", 2, IsUnique = true), StringLength(50)]
         /// <summary>
         /// Will be identified by this field
         /// </summary>
@@ -23,8 +27,8 @@ namespace AltaSoft.Notifications.DAL
         /// <summary>
         /// Display Name
         /// </summary>
-        public string Name { get; set; }
+        public string Description { get; set; }
 
-        public string WebUrl { get; set; }
+        public bool? IsSystem { get; set; }
     }
 }

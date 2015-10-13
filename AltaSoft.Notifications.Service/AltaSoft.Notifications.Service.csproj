@@ -121,11 +121,13 @@
     <Compile Include="ProviderManagers\SmtpMailProviderManager.cs" />
     <Compile Include="ProviderManagers\SignalrProviderManager.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="WorkerManager.cs" />
+    <Compile Include="Common\WorkerBase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProviderManagers\SMSProviderManager.cs" />
+    <Compile Include="ProviderManagers\GeocellSMSProviderManager.cs" />
     <Compile Include="ProviderManagers\SendGridProviderManager.cs" />
+    <Compile Include="Workers\DefaultWorker.cs" />
+    <Compile Include="Workers\SMSWorker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -137,6 +139,7 @@
       <Name>AltaSoft.Notifications.DAL</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

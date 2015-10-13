@@ -1,0 +1,33 @@
+﻿@model IEnumerable<SubscriptionsModel>
+
+<h2>Subscriptions</h2>
+
+<p>
+    @Html.ActionLink("Create", "Create")
+</p>
+<div id="ItemsList">
+    <table class="table">
+        <tbody>
+            <tr>
+                <th nowrap>Event Description</th>
+                <th nowrap>Users</th>
+                <th nowrap class="text-right">Actions</th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.EventDescription
+                    </td>
+                    <td>
+                        @item.UserFullNames.Count
+                        <span>Users</span>
+                    </td>
+                    <td class="text-right">
+                        <a href="@Url.Action("Edit", new { id = item.EventId })"><i class="fa fa-pencil pointer" title="Edit"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

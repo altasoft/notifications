@@ -72,5 +72,33 @@ namespace AltaSoft.Notifications.DAL
 
             return result;
         }
+
+
+        public void Save(int eventId, List<int> userIds, bool clearBeforeAdd = true)
+        {
+            if (clearBeforeAdd)
+            {
+                var removeItems = db.Subscriptions.Where(x => x.EventId == eventId);
+                db.Subscriptions.RemoveRange(removeItems);
+                db.SaveChanges();
+            }
+
+            if (userIds != null)
+            {
+                var existingItems = db.Subscriptions.AsNoTracking().Where(x => x.EventId == eventId).ToList();
+                existingItems.ForEach(x => userIds.Remove(x.UserId));
+
+                db.Subscriptions.AddRange(userIds.Select(x =>
+                    new Subscription
+                    {
+                        EventId = eventId,
+                        UserId = x,
+                        RegDate = DateTime.Now
+                    })
+                );
+
+                db.SaveChanges();
+            }
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace AltaSoft.Notifications.Web.Common
 {
     public class Helper
     {
-        public static List<SelectListItem> GetUsers(int applicationId)
+        public static IEnumerable<SelectListItem> GetUsers(int applicationId)
         {
             using (var bo = new UserBusinessObject())
             {
@@ -21,7 +21,7 @@ namespace AltaSoft.Notifications.Web.Common
             }
         }
 
-        public static List<SelectListItem> GetEvents(int applicationId)
+        public static IEnumerable<SelectListItem> GetEvents(int applicationId)
         {
             using (var bo = new EventBusinessObject())
             {
@@ -33,7 +33,7 @@ namespace AltaSoft.Notifications.Web.Common
             }
         }
 
-        public static List<SelectListItem> GetProviders()
+        public static IEnumerable<SelectListItem> GetProviders()
         {
             using (var bo = new ProviderBusinessObject())
             {
@@ -42,6 +42,30 @@ namespace AltaSoft.Notifications.Web.Common
                     Text = x.Name,
                     Value = x.Id.ToString()
                 }).ToList();
+            }
+        }
+
+        public static IEnumerable<SelectListItem> GetEvents()
+        {
+            using (var bo = new EventBusinessObject())
+            {
+                return bo.GetList(x => x.ApplicationId == UserContext.Current.ApplicationId).Select(x => new SelectListItem
+                {
+                    Text = x.Description,
+                    Value = x.Id.ToString()
+                });
+            }
+        }
+
+        public static IEnumerable<SelectListItem> GetUsers()
+        {
+            using (var bo = new UserBusinessObject())
+            {
+                return bo.GetList(x => x.ApplicationId == UserContext.Current.ApplicationId).Select(x => new SelectListItem
+                {
+                    Text = x.FullName,
+                    Value = x.Id.ToString()
+                });
             }
         }
 

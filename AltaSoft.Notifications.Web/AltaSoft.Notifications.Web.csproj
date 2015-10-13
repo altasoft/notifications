@@ -179,6 +179,7 @@
     <Compile Include="Controllers\APIController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\ProviderController.cs" />
+    <Compile Include="Controllers\SubscriptionController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -197,6 +198,7 @@
     <Compile Include="Models\API\SubscribeUserModel.cs" />
     <Compile Include="Models\API\SubscriptionResult.cs" />
     <Compile Include="Models\ComposeModel.cs" />
+    <Compile Include="Models\SubscriptionsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -792,6 +794,9 @@
     <Content Include="Views\Event\Details.cshtml" />
     <Content Include="Views\Event\Edit.cshtml" />
     <Content Include="Views\Event\Index.cshtml" />
+    <Content Include="Views\Subscription\Create.cshtml" />
+    <Content Include="Views\Subscription\Edit.cshtml" />
+    <Content Include="Views\Subscription\List.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -13,8 +13,7 @@ using System.ComponentModel.Composition;
 
 namespace AltaSoft.Notifications.Service.ProviderManagers
 {
-    [Export(typeof(IProviderManager))]
-    public class SendGridProviderManager : IProviderManager
+    public class SendGridProviderManager : IProviderManager<Message>
     {
         public int Id
         {
@@ -39,11 +38,11 @@ namespace AltaSoft.Notifications.Service.ProviderManagers
             }
             catch (Exceptions.InvalidApiRequestException ex)
             {
-                return new ProviderProcessResult { IsSuccess = false, ErrorMessage = String.Join(",", ex.Errors), ErrorDetails = ex.ToString() };
+                return new ProviderProcessResult { IsSuccess = false, ErrorCode = String.Join(",", ex.Errors), ErrorMessage = ex.ToString() };
             }
             catch (Exception ex)
             {
-                return new ProviderProcessResult { IsSuccess = false, ErrorMessage = ex.Message, ErrorDetails = ex.ToString() };
+                return new ProviderProcessResult { IsSuccess = false, ErrorCode = ex.Message, ErrorMessage = ex.ToString() };
             }
         }
     }
