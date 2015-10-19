@@ -1,4 +1,5 @@
 ﻿using AltaSoft.Notifications.DAL;
+using AltaSoft.Notifications.Web.Common;
 using AltaSoft.Notifications.Web.Models;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,11 @@ namespace AltaSoft.Notifications.Web.Controllers
     {
         public ActionResult Index()
         {
+            if (UserContext.IsAuthenticated)
+                return RedirectToAction("Info", "Account");
+
+
+
             using (var bo = new MessageBusinessObject())
             {
                 var fromDate = DateTime.Now.AddDays(-1);

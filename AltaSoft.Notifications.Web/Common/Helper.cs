@@ -49,7 +49,7 @@ namespace AltaSoft.Notifications.Web.Common
         {
             using (var bo = new EventBusinessObject())
             {
-                return bo.GetList(x => x.ApplicationId == UserContext.Current.ApplicationId).Select(x => new SelectListItem
+                return bo.GetList(x => x.ApplicationId == UserContext.Current.Id).Select(x => new SelectListItem
                 {
                     Text = x.Description,
                     Value = x.Id.ToString()
@@ -61,7 +61,7 @@ namespace AltaSoft.Notifications.Web.Common
         {
             using (var bo = new UserBusinessObject())
             {
-                return bo.GetList(x => x.ApplicationId == UserContext.Current.ApplicationId).Select(x => new SelectListItem
+                return bo.GetList(x => x.ApplicationId == UserContext.Current.Id).Select(x => new SelectListItem
                 {
                     Text = x.FullName,
                     Value = x.Id.ToString()

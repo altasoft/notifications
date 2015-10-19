@@ -103,7 +103,7 @@ namespace AltaSoft.Notifications.Web.Controllers
 
 
 
-                var applicationId = UserContext.Current.ApplicationId.Value;
+                var applicationId = UserContext.Current.Id.Value;
                 var resultIds = new List<int>();
 
                 using (var bo = new MessageBusinessObject())

@@ -1,0 +1,49 @@
+﻿
+<style>
+    .stats-info {
+        text-align: center;
+    }
+
+    .stats-info .inner {
+        border: 1px solid #E4E4E4;
+        border-radius: 15px;
+        padding: 30px;
+    }
+
+    .stats-info div {
+        font-size: 70px;
+    }
+
+    .stats-info div.title {
+        font-size: 16px;
+        margin-top: 20px;
+    }
+</style>
+
+<div>
+    <h2>@UserContext.Current.Name</h2>
+    <a class="btn btn-danger pull-right" href="@Url.Action("LogOff", "Account")">Log out</a>
+    <h4>Last Month Statistics</h4>
+</div>
+<hr />
+<div class="col-md-push-2 col-md-8">
+    <div class="row text-right">
+        
+    </div>
+    <div class="row">
+        <div class="col-md-6 stats-info">
+            <div class="inner">
+                <div>@ViewBag.SMSSentCount</div>
+                <div class="title">SMS Sent</div>
+            </div>
+        </div>
+        <div class="col-md-6 stats-info">
+            <div class="inner">
+                <div>@ViewBag.EmailSentCount</div>
+                <div class="title">Email Sent</div>
+            </div>
+        </div>
+    </div>
+    <div class="row text-center">
+    </div>
+</div>

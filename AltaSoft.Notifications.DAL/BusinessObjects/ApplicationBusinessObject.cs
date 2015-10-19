@@ -15,5 +15,11 @@ namespace AltaSoft.Notifications.DAL
         {
             return db.Applications.AsNoTracking().FirstOrDefault(x => x.Id == id && x.SecretKey == secretKey) != null;
         }
+
+
+        public Application Authenticate(string username, string password)
+        {
+            return db.Applications.FirstOrDefault(x => x.Username == username && x.Password == password);
+        }
     }
 }

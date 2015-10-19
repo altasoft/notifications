@@ -23,22 +23,28 @@
                     <li><a href="@Url.Action("Index", "Help", new { area = "HelpPage" })">API</a></li>
                     <li><a href="https://github.com/altasoft/notifications/blob/master/README.md" target="_blank">Documentation</a></li>
                     <li><a href="https://github.com/altasoft/notifications" target="_blank">Github</a></li>
-                    @if (User.Identity.IsAuthenticated)
+                    @if (UserContext.IsAuthenticated)
                     {
-                        <li><a href="https://github.com/altasoft/notifications" target="_blank">Socar Billing</a></li>
+                        <li>
+                            <a href="@Url.Action("Info", "Account", new { area = "" })">@UserContext.Current.Name</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li><a href="@Url.Action("Login", "Account", new { area = "" })">Login</a></li>
                     }
                 </ul>
             </div>
         </div>
     </div>
-    @if (User.Identity.IsAuthenticated)
+    @if (UserContext.IsAuthenticated)
     {
         <div class="submenu">
             <div class="container">
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav pull-right">
-                        <li><a href="@Url.Action("Compose", "Message")"><i class="fa fa-paper-plane-o"></i> Compose New Message</a></li>
-                        <li><a href="@Url.Action("Index", "Event")"><i class="fa fa-users"></i> Groups</a></li>
+                        <li><a href="@Url.Action("Compose", "Message", new { area = "" })"><i class="fa fa-paper-plane-o"></i> Compose New Message</a></li>
+                        @*<li><a href="@Url.Action("Index", "Event", new { area = "" })"><i class="fa fa-users"></i> Groups</a></li>*@
                     </ul>
                 </div>
             </div>

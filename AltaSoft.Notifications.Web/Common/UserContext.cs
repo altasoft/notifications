@@ -7,14 +7,29 @@ namespace AltaSoft.Notifications.Web.Common
 {
     public class UserContext : Singleton<UserContext>
     {
+        public static bool IsAuthenticated
+        {
+            get { return UserContext.Current.Id != null; }
+        }
+
+        public int? Id { get; set; }
+        public string Name { get; set; }
+
+
         public UserContext()
         {
-            ApplicationId = 6;
         }
 
 
-        public int? UserId { get; set; }
-        public int? ApplicationId { get; set; }
+        public void Login(int? applicationId, string name)
+        {
+            Id = applicationId;
+            Name = name;
+        }
 
+        public void Logout()
+        {
+            Id = null;
+        }
     }
 }

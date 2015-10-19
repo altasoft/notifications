@@ -44,7 +44,7 @@ namespace AltaSoft.Notifications.Web.Controllers
         {
             var model = new Event
             {
-                ApplicationId = UserContext.Current.ApplicationId.Value
+                ApplicationId = UserContext.Current.Id.Value
             };
 
             return View(model);
@@ -59,7 +59,7 @@ namespace AltaSoft.Notifications.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                @event.ApplicationId = UserContext.Current.ApplicationId.Value;
+                @event.ApplicationId = UserContext.Current.Id.Value;
                 db.Events.Add(@event);
                 db.SaveChanges();
                 return RedirectToAction("Index");
