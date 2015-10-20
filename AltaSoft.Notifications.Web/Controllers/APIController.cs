@@ -54,11 +54,7 @@ namespace AltaSoft.Notifications.Web.Controllers
                     MobileNumber = model.MobileNumber
                 };
 
-                using (var bo = new UserBusinessObject())
-                {
-                    bo.Save(user);
-                }
-
+                SaveUserLogic(user);
             }
             catch (Exception ex)
             {
@@ -95,10 +91,7 @@ namespace AltaSoft.Notifications.Web.Controllers
                         MobileNumber = item.MobileNumber
                     };
 
-                    using (var bo = new UserBusinessObject())
-                    {
-                        bo.Save(user);
-                    }
+                    SaveUserLogic(user);
                 }
 
 
@@ -231,6 +224,20 @@ namespace AltaSoft.Notifications.Web.Controllers
 
 
 
+        static void SaveUserLogic(User user)
+        {
+            if (!String.IsNullOrEmpty(user.MobileNumber))
+            {
+                if (user.MobileNumber.Length == 9)
+                    user.MobileNumber = "995" + user.MobileNumber;
+            }
+
+            using (var bo = new UserBusinessObject())
+            {
+                bo.Save(user);
+            }
+        }
+
         static List<Tuple<int?, string>> GetUserInfos(int applicationId, List<int> externalUserIds, int providerId)
         {
             var result = new List<Tuple<int?, string>>();
@@ -303,6 +310,7 @@ namespace AltaSoft.Notifications.Web.Controllers
                     applicationProductId = product.Id;
                     SleepFromTime = product.SleepFromTime;
                     SleepToTime = product.SleepToTime;
+                    model.Priority = product.Priority;
                 }
             }
 

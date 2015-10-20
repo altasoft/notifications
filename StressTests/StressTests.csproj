@@ -54,6 +54,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Common\SaveUserModel.cs" />
     <Compile Include="Common\SendModel.cs" />
     <Compile Include="Stress.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
