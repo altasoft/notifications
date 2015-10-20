@@ -56,14 +56,14 @@ namespace AltaSoft.Notifications.Web.Controllers
             return View(message);
         }
 
-
+        [Secured]
         public ActionResult Compose()
         {
             var model = new ComposeModel();
 
             return View(model);
         }
-        [HttpPost]
+        [HttpPost, Secured]
         public ActionResult Compose(ComposeModel model)
         {
             try
@@ -72,68 +72,44 @@ namespace AltaSoft.Notifications.Web.Controllers
                     throw new Exception("Please fill - Subject");
 
 
-                if (!String.IsNullOrWhiteSpace(model.FileContent)) {
+                if (!String.IsNullOrWhiteSpace(model.FileContent))
+                {
                     model.Message = model.FileContent;
                 }
 
                 if (String.IsNullOrEmpty(model.Message))
                     throw new Exception("Please fill - Message");
 
-                if (model.Users == null)
-                    model.Users = new List<int>();
+                if ((model.Users == null || model.Users.Count == 0) && (model.Groups == null || model.Groups.Count == 0))
+                    throw new Exception("Users must be selected");
 
-                if (model.Events != null && model.Events.Count > 0)
-                {
-                    //using (var bo = new SubscriptionBusinessObject())
-                    //{
-                    //    var eventUserIds = bo.GetList(x => model.Events.Contains(x.EventId) && x.ProviderId == model.Provider).Select(x => x.UserId).ToList();
-                    //    model.Users.AddRange(eventUserIds);
-
-                    //    model.Users = model.Users.Distinct().ToList();
-                    //}
-                }
+                string groupKey = (model.Groups != null && model.Groups.Count > 0) ? String.Join(",", model.Groups) : null;
 
                 var users = new List<DAL.User>();
 
-                using (var bo = new UserBusinessObject())
-                    users = bo.GetList(x => model.Users.Contains(x.Id));
-
-                if (users.Count == 0)
-                    throw new Exception("Users must be selected");
-
-
-
-                var applicationId = UserContext.Current.Id.Value;
-                var resultIds = new List<int>();
-
-                using (var bo = new MessageBusinessObject())
+                if (model.Users != null)
                 {
-                    var groupId = Guid.NewGuid();
-
-                    users.ForEach(u =>
-                    {
-                        var message = new Message
-                        {
-                            UserId = u.Id,
-                            To = Helper.GetToByProvider(u, model.Provider),
-                            ProviderId = model.Provider,
-                            ApplicationId = applicationId,
-                            Subject = model.Subject,
-                            Content = model.Message,
-                            ProcessDate = DateTime.Now,
-                            GroupId = groupId,
-                            Priority = MessagePriority.Normal
-                        };
-
-                        resultIds.Add(bo.Create(message));
-                    });
+                    using (var bo = new UserBusinessObject())
+                        users = bo.GetList(x => model.Users.Contains(x.Id));
                 }
+
+
+                var result = APIController.SendLogic(new Models.API.SendModel
+                {
+                    To = String.Join(",", users.Select(u => Helper.GetToByProvider(u, model.Provider))),
+                    GroupKey = groupKey,
+                    Subject = model.Subject,
+                    Content = model.Message,
+                    Priority = (int)MessagePriority.Normal
+                },
+                model.Provider,
+                UserContext.Current.Id);
 
 
                 return Json(new
                 {
                     IsSuccess = true,
-                    MessageIds = resultIds
+                    MessageIds = result.SuccessMessageIds
                 },
                 JsonRequestBehavior.AllowGet);
             }

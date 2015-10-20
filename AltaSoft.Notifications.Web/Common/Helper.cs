@@ -9,30 +9,18 @@ namespace AltaSoft.Notifications.Web.Common
 {
     public class Helper
     {
-        public static IEnumerable<SelectListItem> GetUsers(int applicationId)
+        public static IEnumerable<SelectListItem> GetUsers()
         {
             using (var bo = new UserBusinessObject())
             {
-                return bo.GetList(x => x.ApplicationId == applicationId).Select(x => new SelectListItem
+                return bo.GetList(x => x.ApplicationId == UserContext.Current.Id).Select(x => new SelectListItem
                 {
                     Text = x.FullName,
                     Value = x.Id.ToString()
                 }).ToList();
             }
         }
-
-        public static IEnumerable<SelectListItem> GetEvents(int applicationId)
-        {
-            using (var bo = new EventBusinessObject())
-            {
-                return bo.GetList(x => x.ApplicationId == applicationId).Select(x => new SelectListItem
-                {
-                    Text = x.Description,
-                    Value = x.Id.ToString()
-                }).ToList();
-            }
-        }
-
+        
         public static IEnumerable<SelectListItem> GetProviders()
         {
             using (var bo = new ProviderBusinessObject())
@@ -45,29 +33,18 @@ namespace AltaSoft.Notifications.Web.Common
             }
         }
 
-        public static IEnumerable<SelectListItem> GetEvents()
+        public static IEnumerable<SelectListItem> GetGroups()
         {
-            using (var bo = new EventBusinessObject())
+            using (var bo = new GroupBusinessObject())
             {
                 return bo.GetList(x => x.ApplicationId == UserContext.Current.Id).Select(x => new SelectListItem
                 {
                     Text = x.Description,
-                    Value = x.Id.ToString()
+                    Value = x.Key
                 });
             }
         }
 
-        public static IEnumerable<SelectListItem> GetUsers()
-        {
-            using (var bo = new UserBusinessObject())
-            {
-                return bo.GetList(x => x.ApplicationId == UserContext.Current.Id).Select(x => new SelectListItem
-                {
-                    Text = x.FullName,
-                    Value = x.Id.ToString()
-                });
-            }
-        }
 
         public static string GetToByProvider(User user, int providerId)
         {
@@ -75,7 +52,7 @@ namespace AltaSoft.Notifications.Web.Common
             {
                 case 1: return user.Email;
                 case 2: return user.MobileNumber;
-                case 3: return user.ExternalUserId;
+                case 3: return user.ExternalUserId.ToString();
                 case 4: return user.Email;
                 default: return String.Empty;
             }

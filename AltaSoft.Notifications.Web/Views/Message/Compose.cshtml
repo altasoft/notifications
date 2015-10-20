@@ -41,16 +41,16 @@
                 @Html.LabelFor(x => x.Users, new { @class = "control-label" })
             </div>
             <div class="col-md-8">
-                @Html.ListBoxFor(x => x.Users, Helper.GetUsers(6), new { placeholder = "None", @class = "form-control" })
+                @Html.ListBoxFor(x => x.Users, Helper.GetUsers(), new { placeholder = "None", @class = "form-control" })
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-2 text-right">
                 <i class="fa fa-users"></i>
-                @Html.LabelFor(x => x.Events, new { @class = "control-label" })
+                @Html.LabelFor(x => x.Groups, new { @class = "control-label" })
             </div>
             <div class="col-md-8">
-                @Html.ListBoxFor(x => x.Events, Helper.GetEvents(6), new { placeholder = "None", @class = "form-control" })
+                @Html.ListBoxFor(x => x.Groups, Helper.GetGroups(), new { placeholder = "None", @class = "form-control" })
             </div>
         </div>
         <hr />
@@ -104,7 +104,9 @@
                     return;
                 }
 
-                $('.result-panel').append('<div class="alert alert-success"><i class="fa fa-paper-plane-o"></i> ' + res.MessageIds.length + ' Message' + (res.MessageIds.length > 1 ? 's' : '') + ' created successfully! <a target="_blank" href="/Message/Index/' + res.MessageIds + '" class="pull-right">View Details <i class="fa fa-angle-double-right"></i></a></div>')
+                var link = ' <a target="_blank" href="/Message/Index/' + res.MessageIds + '" class="pull-right">View Details <i class="fa fa-angle-double-right"></i></a>';
+
+                $('.result-panel').append('<div class="alert alert-success"><i class="fa fa-paper-plane-o"></i> ' + res.MessageIds.length + ' Message' + (res.MessageIds.length > 1 ? 's' : '') + ' created successfully!</div>')
                 console.log(res.MessageIds);
             });
 

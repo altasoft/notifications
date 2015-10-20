@@ -43,7 +43,7 @@ namespace AltaSoft.Notifications.Service.Hubs
 
             var externalUserId = await GetExternalUserId(checkUserIdUrl, externalUserToken, externalUserIPAddress);
 
-            if (String.IsNullOrWhiteSpace(externalUserId))
+            if (externalUserId.HasValue)
                 return;
 
             // Check if user exists in our database
@@ -53,7 +53,7 @@ namespace AltaSoft.Notifications.Service.Hubs
                 if (user == null) return;
             }
 
-            GroupName = applicationId + externalUserId;
+            GroupName = applicationId.ToString() + externalUserId.ToString();
 
 
             await Groups.Add(Context.ConnectionId, GroupName);
@@ -72,16 +72,16 @@ namespace AltaSoft.Notifications.Service.Hubs
         }
 
 
-        async Task<string> GetExternalUserId(string url, string token, string ipaddress)
+        async Task<int?> GetExternalUserId(string url, string token, string ipaddress)
         {
             var client = new HttpClient();
             var result = await client.GetStringAsync(url + "?token=" + token + "&ipaddress=" + ipaddress);
 
             var o = JObject.Parse(result);
             var isSuccess = (bool)o["IsSuccess"];
-            var userID = (string)o["UserID"];
+            var userID = (int)o["UserID"];
 
-            return isSuccess ? userID : String.Empty;
+            return isSuccess ? (int?)userID : null;
         }
 
         string GetIPAddress()

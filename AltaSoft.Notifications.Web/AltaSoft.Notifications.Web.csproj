@@ -175,7 +175,6 @@
     <Compile Include="Common\UserContext.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
-    <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\APIController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
@@ -196,6 +195,7 @@
     <Compile Include="Models\API\ApplicationCredentialsModel.cs" />
     <Compile Include="Models\API\SaveUsersModel.cs" />
     <Compile Include="Models\API\SaveUserModel.cs" />
+    <Compile Include="Models\API\SendResultModel.cs" />
     <Compile Include="Models\API\SubscribeUserModel.cs" />
     <Compile Include="Models\API\SubscriptionResult.cs" />
     <Compile Include="Models\ComposeModel.cs" />

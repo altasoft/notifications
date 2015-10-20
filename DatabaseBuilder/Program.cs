@@ -32,7 +32,7 @@ namespace DatabaseBuilder
                     var application = db.Applications.Add(new Application { SecretKey = "TEST", Username = "EZ", Password = "123", RegDate = DateTime.Now, EmailFromAddress = "notofication@altasoft.ge", EmailFromFullName = "Notification System", Name = "Test Project", Description = "For testing purposes only", IsTestMode = true });
 
                     // Test Users
-                    db.Users.Add(new User { FirstName = "Test", FullName = "Test Tester", ExternalUserId = "1", MobileNumber = "995593159115", Email = "e.zibzibadze@altasoft.ge", ApplicationId = application.Id, RegDate = DateTime.Now });
+                    db.Users.Add(new User { FirstName = "Test", FullName = "Test Tester", ExternalUserId = 1, MobileNumber = "995593159115", Email = "e.zibzibadze@altasoft.ge", ApplicationId = application.Id, RegDate = DateTime.Now });
 
 
                     db.SaveChanges();

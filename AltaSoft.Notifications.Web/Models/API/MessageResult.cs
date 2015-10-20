@@ -8,7 +8,7 @@ namespace AltaSoft.Notifications.Web.Models.API
 {
     public class MessageResult
     {
-        public string ExternalUserId { get; set; }
+        public int? ExternalUserId { get; set; }
 
         public string ProviderKey { get; set; }
 

@@ -11,10 +11,6 @@ namespace GDBS.UI.Controllers
 {
     public partial class AccountController : Controller
     {
-        private const string Owner = "Default";
-        private const string Bucket = "client-attachments";
-
-
         public virtual ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
@@ -64,12 +60,18 @@ namespace GDBS.UI.Controllers
         [Secured]
         public virtual ActionResult Info()
         {
+            var monthStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddDays(-1);
+
             using (var bo = new MessageBusinessObject())
             {
-                var fromDate = DateTime.Now.AddDays(-1);
-                ViewBag.SMSSentCount = bo.ItemsCount(x => x.ProviderId == 2 && x.RegDate.Month == DateTime.Now.Month && x.ApplicationId == UserContext.Current.Id && x.State == MessageStates.Success);
-                ViewBag.EmailSentCount = bo.ItemsCount(x => x.ProviderId == 4 && x.RegDate.Month == DateTime.Now.Month && x.ApplicationId == UserContext.Current.Id && x.State == MessageStates.Success);
+                ViewBag.EmailSentCount = bo.ItemsCount(x => x.ProviderId == 4 && x.RegDate > monthStart && x.ApplicationId == UserContext.Current.Id && x.State == MessageStates.Success);
             }
+
+            using (var bo = new SMSBusinessObject())
+            {
+                ViewBag.SMSSentCount = bo.ItemsCount(x => x.ProviderId == 2 && x.RegDate > monthStart && x.ApplicationId == UserContext.Current.Id && x.State == MessageStates.Success);
+            }
+
 
 
             return View();

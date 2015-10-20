@@ -19,12 +19,13 @@ namespace StressTests
             {
                 ApplicationId = 1,
                 ApplicationSecretKey = "TEST",
-
+                ApplicationProductKey = "",
+                
                 To = "995593149115",
                 ProviderKey = "sms",
                 Content = "Hello, Bye",
 
-                Priority = 1,
+                Priority = 0,
                 IsTest = true
             };
 

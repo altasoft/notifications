@@ -10,8 +10,7 @@ namespace AltaSoft.Notifications.Web.Models
     public class ComposeModel
     {
         public List<int> Users { get; set; }
-        [DisplayName("Groups")]
-        public List<int> Events { get; set; }
+        public List<string> Groups { get; set; }
         public int Provider { get; set; }
         public DateTime? ProcessDate { get; set; }
         public bool ForceNow { get; set; }

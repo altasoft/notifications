@@ -21,7 +21,7 @@ namespace AltaSoft.Notifications.DAL
         /// <summary>
         /// გამგზავნი სისტემის იდენთიფიკატორი, არააუცილებელი ველი, საჭიროების შემთხვევაში შეუძლია გამომძახებელს გამოიყენოს
         /// </summary>
-        public int? ExternalSystemId { get; set; }
+        public int? ExternalId { get; set; }
         /// <summary>
         /// მაგთი, ჯეოსელი და ა.შ.
         /// </summary>
@@ -38,8 +38,8 @@ namespace AltaSoft.Notifications.DAL
         public string Message { get; set; }
         [StringLength(20)]
         public string SenderNumber { get; set; }
-        public DateTime? SleepFromTime { get; set; }
-        public DateTime? SleepToTime { get; set; }
+        public TimeSpan? SleepFromTime { get; set; }
+        public TimeSpan? SleepToTime { get; set; }
 
         [StringLength(20)]
         public string ErrorCode { get; set; }
@@ -54,8 +54,6 @@ namespace AltaSoft.Notifications.DAL
         public int TryCount { get; set; }
 
         public Guid? GroupId { get; set; }
-
-        public bool ForceSendingNow { get; set; }
 
 
         //TODO: გასარკვევი

@@ -49,9 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusinessObjects\ApplicationProductBusinessObject.cs" />
+    <Compile Include="BusinessObjects\GroupBusinessObject.cs" />
     <Compile Include="BusinessObjects\ApplicationBusinessObject.cs" />
     <Compile Include="BusinessObjects\ProviderBusinessObject.cs" />
-    <Compile Include="BusinessObjects\EventBusinessObject.cs" />
     <Compile Include="BusinessObjects\SMSBusinessObject.cs" />
     <Compile Include="BusinessObjects\UserBusinessObject.cs" />
     <Compile Include="BusinessObjects\MessageBusinessObject.cs" />
@@ -63,12 +64,11 @@
     <Compile Include="Models\Enums\MessagePriority.cs" />
     <Compile Include="Models\Enums\MessageStates.cs" />
     <Compile Include="Models\IProviderInfo.cs" />
-    <Compile Include="Models\UserGroup.cs" />
-    <Compile Include="Models\Event.cs" />
+    <Compile Include="Models\Group.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Provider.cs" />
     <Compile Include="Models\SMS.cs" />
-    <Compile Include="Models\Subscription.cs" />
+    <Compile Include="Models\UserGroup.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

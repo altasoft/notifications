@@ -1,6 +1,7 @@
 ﻿using AltaSoft.Notifications.DAL.Common;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,10 +22,13 @@ namespace AltaSoft.Notifications.DAL
         public int ApplicationId { get; set; }
         public Application Application { get; set; }
 
+        [StringLength(50)]
         public string To { get; set; }
 
+        [StringLength(200)]
         public string Subject { get; set; }
 
+        [StringLength(2048)]
         public string Content { get; set; }
 
         public int RetryCount { get; set; }

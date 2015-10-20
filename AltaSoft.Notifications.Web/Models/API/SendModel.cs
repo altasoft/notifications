@@ -8,10 +8,11 @@ namespace AltaSoft.Notifications.Web.Models.API
 {
     public class SendModel : ApplicationCredentialsModel
     {
-        public string ExternalUserId { get; set; }
-        public List<string> ExternalUserIds { get; set; }
+        public string ApplicationProductKey { get; set; }
+        public int? ExternalUserId { get; set; }
+        public List<int> ExternalUserIds { get; set; }
         public string To { get; set; }
-        public string EventKey { get; set; }
+        public string GroupKey { get; set; }
 
         public string ProviderKey { get; set; }
         public string Subject { get; set; }

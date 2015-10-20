@@ -13,144 +13,27 @@ namespace AltaSoft.Notifications.Web.Controllers
     public class APIController : ApiController
     {
         [HttpPost]
-        public APIResult<List<int>> Send(SendModel model, [FromUri]SendModel uriModel)
+        public APIResult<SendResultModel> Send(SendModel model)
         {
-            if (model == null)
-                model = uriModel;
-
-            var messageIds = new List<int>();
+            var result = new SendResultModel();
 
             try
             {
-                if (model == null)
-                    throw new Exception("Please pass model");
-
-
-                Application application;
-                using (var bo = new ApplicationBusinessObject())
-                {
-                    application = bo.GetById(model.ApplicationId);
-                    if (application == null || application.SecretKey != model.ApplicationSecretKey)
-                        throw new Exception("Invalid application credentials");
-                }
-
-                if (String.IsNullOrEmpty(model.Content))
-                    throw new Exception("Content can't be empty");
-
-
-                Provider provider;
-                using (var bo = new ProviderBusinessObject())
-                {
-                    provider = bo.GetByKey(model.ProviderKey);
-                    if (provider == null)
-                        throw new Exception("Provider not found");
-                }
-
-
-
-                if (model.ExternalUserIds == null)
-                    model.ExternalUserIds = new List<string>();
-
-                if (!String.IsNullOrEmpty(model.ExternalUserId))
-                    model.ExternalUserIds.Add(model.ExternalUserId);
-
-                var userInfos = GetUserInfos(model.ApplicationId, model.ExternalUserIds, provider.Id);
-
-                if (!String.IsNullOrEmpty(model.To))
-                {
-                    model.To.Split(',').ToList().ForEach(x => userInfos.Add(new Tuple<int?, string>(null, x)));
-                }
-
-
-
-
-                //Event ev = null;
-                //if (!String.IsNullOrEmpty(model.EventKey))
-                //{
-                //    using (var bo = new EventBusinessObject())
-                //        ev = bo.GetByKey(model.ApplicationId, model.EventKey);
-                //}
-
-                //if (ev != null)
-                //{
-                //    using (var bo = new SubscriptionBusinessObject())
-                //    {
-                //        var items = bo.GetList(x => x.EventId == ev.Id);
-                //        userInfos.AddRange(items.ConvertAll(x => new Tuple<int?, string>(x.UserId, Helper.GetToByProvider(x.User, x.ProviderId))));
-                //    }
-                //}
-
-
-                //if (userInfos.Count == 0)
-                //    throw new Exception("No Users found to send. Please set: ExternalUserId, ExternalUserIds, To, or EventKey");
-
-
-                var groupId = Guid.NewGuid();
-
-                // თუ SMS-ების გაგზავნაა
-                if (provider.Id == 2)
-                {
-                    using (var bo = new SMSBusinessObject())
-                    {
-                        var smsItems = userInfos.Select(x => new SMS
-                        {
-                            To = x.Item2,
-                            ProviderId = provider.Id,
-                            GroupId = groupId,
-                            SenderNumber = application.SMSSenderNumber,
-                            ApplicationProductId = null,
-                            ApplicationId = model.ApplicationId,
-                            Message = model.Content,
-                            ProcessDate = model.ProcessDate,
-                            Priority = model.Priority,
-                            IsTest = model.IsTest
-                        }).ToList();
-
-                        messageIds = bo.BulkInsert(smsItems);
-                    }
-                }
-                else
-                {
-                    foreach (var info in userInfos)
-                    {
-                        var message = new Message
-                        {
-                            UserId = info.Item1,
-                            To = info.Item2,
-                            ProviderId = provider.Id,
-                            ApplicationId = model.ApplicationId,
-                            Subject = model.Subject,
-                            Content = model.Content,
-                            ProcessDate = model.ProcessDate,
-                            GroupId = groupId,
-                            Priority = (MessagePriority)model.Priority,
-                            IsTest = model.IsTest
-                        };
-
-                        using (var bo = new MessageBusinessObject())
-                        {
-                            var id = bo.Create(message);
-                            messageIds.Add(id);
-                        }
-                    }
-                }
+                result = SendLogic(model);
             }
             catch (Exception ex)
             {
-                return new APIResult<List<int>>(ex.Message, ex.ToString());
+                return new APIResult<SendResultModel>(ex.Message, ex.ToString());
             }
 
-            return new APIResult<List<int>>(messageIds);
+            return new APIResult<SendResultModel>(result);
         }
 
         [HttpPost]
-        public APIResult SaveUser(SaveUserModel model, [FromUri]SaveUserModel uriModel)
+        public APIResult SaveUser(SaveUserModel model)
         {
             try
             {
-                if (model == null)
-                    model = uriModel;
-
                 if (model == null)
                     throw new Exception("Please pass model");
 
@@ -186,13 +69,10 @@ namespace AltaSoft.Notifications.Web.Controllers
         }
 
         [HttpPost]
-        public APIResult SaveUsers(SaveUsersModel model, [FromUri]SaveUsersModel uriModel)
+        public APIResult SaveUsers(SaveUsersModel model)
         {
             try
             {
-                if (model == null)
-                    model = uriModel;
-
                 if (model == null)
                     throw new Exception("Please pass model");
 
@@ -229,246 +109,6 @@ namespace AltaSoft.Notifications.Web.Controllers
             }
 
             return new APIResult();
-        }
-
-        [HttpPost]
-        public APIResult SaveEvent(SaveEventViewModel model, [FromUri]SaveEventViewModel uriModel)
-        {
-            try
-            {
-                if (model == null)
-                    model = uriModel;
-
-                if (model == null)
-                    throw new Exception("Please pass model");
-
-                using (var bo = new ApplicationBusinessObject())
-                {
-                    if (!bo.Check(model.ApplicationId, model.ApplicationSecretKey))
-                        throw new Exception("Invalid application credentials");
-                }
-
-                using (var bo = new EventBusinessObject())
-                {
-                    var item = new Event
-                    {
-                        ApplicationId = model.ApplicationId,
-                        Key = model.Key,
-                        Description = model.Description
-                    };
-
-                    bo.Save(item);
-                }
-            }
-            catch (Exception ex)
-            {
-                return new APIResult(ex.Message, ex.ToString());
-            }
-
-            return new APIResult();
-        }
-
-        [HttpPost]
-        public APIResult DeleteEvent(DeleteEventModel model, [FromUri]DeleteEventModel uriModel)
-        {
-            try
-            {
-                if (model == null)
-                    model = uriModel;
-
-                if (model == null)
-                    throw new Exception("Please pass model");
-
-                using (var bo = new ApplicationBusinessObject())
-                {
-                    if (!bo.Check(model.ApplicationId, model.ApplicationSecretKey))
-                        throw new Exception("Invalid application credentials");
-                }
-
-                using (var bo = new EventBusinessObject())
-                {
-                    bo.Delete(model.ApplicationId, model.EventKey);
-                }
-            }
-            catch (Exception ex)
-            {
-                return new APIResult(ex.Message, ex.ToString());
-            }
-
-            return new APIResult();
-        }
-
-        [HttpPost]
-        public APIResult SubscribeEvent(SubscribeUserModel model, [FromUri]SubscribeUserModel uriModel)
-        {
-            try
-            {
-                if (model == null)
-                    model = uriModel;
-
-                if (model == null)
-                    throw new Exception("Please pass model");
-
-                using (var bo = new ApplicationBusinessObject())
-                {
-                    if (!bo.Check(model.ApplicationId, model.ApplicationSecretKey))
-                        throw new Exception("Invalid application credentials");
-                }
-
-                int eventId;
-                using (var bo = new EventBusinessObject())
-                {
-                    var ev = bo.GetByKey(model.ApplicationId, model.EventKey);
-                    if (ev == null)
-                        throw new Exception("Event not found");
-
-                    eventId = ev.Id;
-                }
-
-                int userId;
-                using (var bo = new UserBusinessObject())
-                {
-                    var user = bo.GetByExternalUserId(model.ApplicationId, model.ExternalUserId);
-                    if (user == null)
-                        throw new Exception("User not found");
-
-                    userId = user.Id;
-                }
-
-                Provider provider;
-                using (var bo = new ProviderBusinessObject())
-                {
-                    provider = bo.GetByKey(model.ProviderKey);
-                    if (provider == null)
-                        throw new Exception("Provider not found");
-                }
-
-
-                //var subscription = new Subscription
-                //{
-                //    EventId = eventId,
-                //    UserId = userId,
-                //    ProviderId = provider.Id
-                //};
-
-                //using (var bo = new SubscriptionBusinessObject())
-                //{
-                //    bo.Save(subscription);
-                //}
-
-            }
-            catch (Exception ex)
-            {
-                return new APIResult(ex.Message, ex.ToString());
-            }
-
-            return new APIResult();
-        }
-
-        [HttpPost]
-        public APIResult UnsubscribeEvent(SubscribeUserModel model, [FromUri]SubscribeUserModel uriModel)
-        {
-            try
-            {
-                if (model == null)
-                    model = uriModel;
-
-                if (model == null)
-                    throw new Exception("Please pass model");
-
-                using (var bo = new ApplicationBusinessObject())
-                {
-                    if (!bo.Check(model.ApplicationId, model.ApplicationSecretKey))
-                        throw new Exception("Invalid application credentials");
-                }
-
-                int eventId;
-                using (var bo = new EventBusinessObject())
-                {
-                    var ev = bo.GetByKey(model.ApplicationId, model.EventKey);
-                    if (ev == null)
-                        throw new Exception("Event not found");
-
-                    eventId = ev.Id;
-                }
-
-                int userId;
-                using (var bo = new UserBusinessObject())
-                {
-                    var user = bo.GetByExternalUserId(model.ApplicationId, model.ExternalUserId);
-                    if (user == null)
-                        throw new Exception("User not found");
-
-                    userId = user.Id;
-                }
-
-                Provider provider;
-                using (var bo = new ProviderBusinessObject())
-                {
-                    provider = bo.GetByKey(model.ProviderKey);
-                    if (provider == null)
-                        throw new Exception("Provider not found");
-                }
-
-
-                //var subscription = new Subscription
-                //{
-                //    EventId = eventId,
-                //    UserId = userId,
-                //    ProviderId = provider.Id
-                //};
-
-                //using (var bo = new SubscriptionBusinessObject())
-                //{
-                //    bo.Unsubscribe(subscription);
-                //}
-
-            }
-            catch (Exception ex)
-            {
-                return new APIResult(ex.Message, ex.ToString());
-            }
-
-            return new APIResult();
-        }
-
-
-
-        [HttpGet]
-        public APIResult<List<EventResult>> Events(ApplicationCredentialsModel model, [FromUri]ApplicationCredentialsModel uriModel)
-        {
-            try
-            {
-                if (model == null)
-                    model = uriModel;
-
-                if (model == null)
-                    throw new Exception("Please pass model");
-
-                using (var bo = new ApplicationBusinessObject())
-                {
-                    if (!bo.Check(model.ApplicationId, model.ApplicationSecretKey))
-                        throw new Exception("Invalid application credentials");
-                }
-
-                using (var bo = new EventBusinessObject())
-                {
-                    var result = bo.GetList(x => x.ApplicationId == model.ApplicationId).ConvertAll(x => new EventResult
-                    {
-                        Key = x.Key,
-                        Description = x.Description,
-                        RegDate = x.RegDate,
-                        IsSystem = x.IsSystem ?? false
-                    });
-
-                    return new APIResult<List<EventResult>>(result);
-                }
-
-            }
-            catch (Exception ex)
-            {
-                return new APIResult<List<EventResult>>(ex.Message, ex.ToString());
-            }
         }
 
         [HttpGet]
@@ -591,7 +231,7 @@ namespace AltaSoft.Notifications.Web.Controllers
 
 
 
-        List<Tuple<int?, string>> GetUserInfos(int applicationId, List<string> externalUserIds, int providerId)
+        static List<Tuple<int?, string>> GetUserInfos(int applicationId, List<int> externalUserIds, int providerId)
         {
             var result = new List<Tuple<int?, string>>();
 
@@ -599,7 +239,7 @@ namespace AltaSoft.Notifications.Web.Controllers
             {
                 using (var bo = new UserBusinessObject())
                 {
-                    var user = bo.GetByExternalUserId(applicationId, item.Trim());
+                    var user = bo.GetByExternalUserId(applicationId, item);
                     if (user == null)
                         continue;
 
@@ -612,6 +252,205 @@ namespace AltaSoft.Notifications.Web.Controllers
             }
 
             return result;
+        }
+
+        internal static SendResultModel SendLogic(SendModel model, int? providerId = null, int? applicationId = null)
+        {
+            var result = new SendResultModel();
+            result.SuccessMessageIds = new List<int>();
+            result.FailedMessages = new List<string>();
+
+            if (model == null)
+                throw new Exception("Please pass model");
+
+
+            #region Application
+            Application application;
+            using (var bo = new ApplicationBusinessObject())
+            {
+                if (applicationId.HasValue)
+                    application = bo.GetById(applicationId);
+                else
+                    application = bo.GetById(model.ApplicationId);
+
+                if (!applicationId.HasValue)
+                {
+                    if (application == null || application.SecretKey != model.ApplicationSecretKey)
+                        throw new Exception("Invalid application credentials");
+                }
+                else
+                {
+                    if (application == null)
+                        throw new Exception("Invalid application");
+                }
+            }
+            #endregion
+
+            #region Application Product
+            TimeSpan? SleepFromTime = null, SleepToTime = null;
+            int? applicationProductId = null;
+            if (!String.IsNullOrEmpty(model.ApplicationProductKey))
+            {
+                using (var bo = new ApplicationProductBusinessObject())
+                {
+                    var product = bo.GetByKey(model.ApplicationProductKey);
+                    if (product == null)
+                        throw new Exception("Invalid Product provided");
+
+                    if (!product.IsActive)
+                        throw new Exception("Product is not Active");
+
+                    applicationProductId = product.Id;
+                    SleepFromTime = product.SleepFromTime;
+                    SleepToTime = product.SleepToTime;
+                }
+            }
+
+            #endregion
+
+
+
+            if (String.IsNullOrEmpty(model.Content))
+                throw new Exception("Content can't be empty");
+
+
+            #region Provider
+            if (!providerId.HasValue)
+            {
+                Provider provider;
+                using (var bo = new ProviderBusinessObject())
+                {
+                    provider = bo.GetByKey(model.ProviderKey);
+                    if (provider == null)
+                        throw new Exception("Provider not found");
+                }
+                providerId = provider.Id;
+            }
+            #endregion
+
+
+            if (model.ExternalUserIds == null)
+                model.ExternalUserIds = new List<int>();
+
+            if (model.ExternalUserId.HasValue)
+                model.ExternalUserIds.Add(model.ExternalUserId.Value);
+
+            var userInfos = GetUserInfos(application.Id, model.ExternalUserIds, providerId.Value);
+
+            if (!String.IsNullOrEmpty(model.To))
+            {
+                model.To.Split(',').ToList().ForEach(x => userInfos.Add(new Tuple<int?, string>(null, x)));
+            }
+
+
+
+            #region Group
+            if (!String.IsNullOrEmpty(model.GroupKey))
+            {
+                using (var bo = new GroupBusinessObject())
+                {
+                    var groupIds = bo.GetGroupIdsByKey(application.Id, model.GroupKey);
+                    var items = bo.GetUsersByGroups(groupIds.ToArray());
+
+                    userInfos.AddRange(items.ConvertAll(x => new Tuple<int?, string>(x.Id, Helper.GetToByProvider(x, providerId.Value))));
+                }
+            }
+            #endregion
+
+
+            //if (userInfos.Count == 0)
+            //    throw new Exception("No Users found to send. Please set: ExternalUserId, ExternalUserIds, To, or EventKey");
+
+
+            var groupId = Guid.NewGuid();
+
+            // თუ SMS-ების გაგზავნაა
+            if (providerId == 2)
+            {
+                result = SendSMSItems(userInfos.Select(x => x.Item2), providerId.Value, applicationProductId, groupId, application, SleepFromTime, SleepToTime, model.Content, model.ProcessDate, model.Priority, model.IsTest);
+            }
+            else
+            {
+                foreach (var info in userInfos)
+                {
+                    var message = new Message
+                    {
+                        UserId = info.Item1,
+                        To = info.Item2,
+                        ProviderId = providerId.Value,
+                        ApplicationId = application.Id,
+                        Subject = model.Subject,
+                        Content = model.Content,
+                        ProcessDate = model.ProcessDate,
+                        GroupId = groupId,
+                        Priority = (MessagePriority)model.Priority,
+                        IsTest = model.IsTest
+                    };
+
+                    using (var bo = new MessageBusinessObject())
+                    {
+                        var id = bo.Create(message);
+                        result.SuccessMessageIds.Add(id);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+
+
+        static SendResultModel SendSMSItems(IEnumerable<string> mobileNumbers, int providerId, int? applicationProductId, Guid groupId, Application application, TimeSpan? SleepFromTime, TimeSpan? SleepToTime, string message, DateTime? processDate, int priority, bool isTest)
+        {
+
+            var result = new SendResultModel();
+            result.SuccessMessageIds = new List<int>();
+            result.FailedMessages = new List<string>();
+
+            mobileNumbers = mobileNumbers.Distinct();
+
+            using (var bo = new SMSBusinessObject())
+            {
+                foreach (var item in mobileNumbers)
+                {
+                    try
+                    {
+                        var to = item.Trim(' ', '+');
+
+                        if (to.Length == 9)
+                            to = "995" + to;
+
+                        if (to.Length != 12)
+                            throw new Exception("Invalid phone number");
+
+
+
+                        var id = bo.Create(new SMS
+                        {
+                            To = to,
+                            ProviderId = providerId,
+                            GroupId = groupId,
+                            SenderNumber = application.SMSSenderNumber,
+                            ApplicationId = application.Id,
+                            ApplicationProductId = applicationProductId,
+                            SleepFromTime = SleepFromTime,
+                            SleepToTime = SleepToTime,
+                            Message = message,
+                            ProcessDate = processDate,
+                            Priority = priority,
+                            IsTest = application.IsTestMode || isTest
+                        });
+
+                        result.SuccessMessageIds.Add(id);
+                    }
+                    catch (Exception ex)
+                    {
+                        result.FailedMessages.Add(String.Format("[{0}] {1}", item, ex.Message));
+                    }
+                }
+
+                return result;
+            }
         }
     }
 }
